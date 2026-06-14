@@ -6,6 +6,7 @@ R2_ENV="$HOME/.config/grimshot/env"
 [ -f "$R2_ENV" ] && . "$R2_ENV"
 
 RECORDINGS_DIR="$HOME/Recordings"
+LOCKFILE="/tmp/.wf-recorder.lock"
 mkdir -p "$RECORDINGS_DIR"
 
 play_sound() {
@@ -33,24 +34,24 @@ upload_to_r2() {
 }
 
 stop_recording() {
-  local pid
-  pid=$(grep -rl wf-recorder /proc/*/cmdline 2>/dev/null | grep -v '/proc/self\|/proc/thread-self' | head -1 | cut -d/ -f3)
+  local pid file url
 
+  pid=$(cat "$LOCKFILE" 2>/dev/null)
   [ -z "$pid" ] && { notify-send -t 3000 -a recorder "Recorder" "No recording found"; exit 1; }
+  [ ! -d "/proc/$pid" ] && { rm -f "$LOCKFILE"; notify-send -t 3000 -a recorder "Recorder" "No recording found"; exit 1; }
 
   kill -INT "$pid"
   while [ -d "/proc/$pid" ]; do sleep 0.1; done
   sleep 1
+  rm -f "$LOCKFILE"
 
   play_sound
 
-  local file
   file=$(find "$RECORDINGS_DIR" -maxdepth 1 -name '*.mp4' -printf '%T@ %p\n' \
     | sort -rn | head -1 | cut -d' ' -f2-)
 
   [ -z "$file" ] && { notify-send -t 3000 -a recorder "Recorder" "No file found"; exit 1; }
 
-  local url
   url=$(upload_to_r2 "$file")
 
   if [ -n "$url" ]; then
@@ -72,7 +73,7 @@ start_recording() {
   play_sound
   sleep 0.5
 
-  setsid wf-recorder \
+  wf-recorder \
     --audio="$sink" \
     --framerate=120 \
     --codec=libx264 \
@@ -81,11 +82,12 @@ start_recording() {
     -p preset=fast \
     -p crf=18 &
 
+  echo $! > "$LOCKFILE"
   notify-send -t 3000 -a recorder "Recording started" "$(date +%H:%M:%S)"
 }
 
 # Main
-if grep -rl wf-recorder /proc/*/cmdline 2>/dev/null | grep -qv '/proc/self\|/proc/thread-self'; then
+if [ -f "$LOCKFILE" ]; then
   stop_recording
 else
   start_recording
