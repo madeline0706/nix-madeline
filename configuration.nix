@@ -54,7 +54,7 @@ xdg.portal = {
     xdg-desktop-portal-termfilechooser
   ];
   config.common = {
-    "org.freedesktop.impl.portal.FileChooser" = "termfilechooser";
+    "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
   };
 };
 
