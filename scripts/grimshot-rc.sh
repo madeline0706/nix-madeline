@@ -40,6 +40,7 @@ stop_recording() {
 
   kill -INT "$pid"
   while [ -d "/proc/$pid" ]; do sleep 0.1; done
+  sleep 1
 
   play_sound
 
@@ -71,7 +72,7 @@ start_recording() {
   play_sound
   sleep 0.5
 
-  wf-recorder \
+  setsid wf-recorder \
     --audio="$sink" \
     --framerate=120 \
     --codec=libx264 \
