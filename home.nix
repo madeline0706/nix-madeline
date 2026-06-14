@@ -6,6 +6,10 @@
     terminus_font
     playerctl
     libnotify
+    arrpc
+    lf
+    bemenu
+    j4-dmenu-desktop
   ];
   imports = [
     ./sway.nix 
