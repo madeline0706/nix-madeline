@@ -7,8 +7,9 @@
     playerctl
   ];
   imports = [
-    ./sway.nix
+    ./sway.nix 
     ./waybar.nix
     ./foot.nix
+    ./mako.nix
   ];
 }
