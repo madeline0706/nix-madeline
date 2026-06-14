@@ -36,6 +36,9 @@
       bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
       bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
       bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+      # Screenshots / Recordings
+      bindsym $mod+z exec grimshot-ss --notify savecopy area
+      bindsym $mod+x exec grimshot-rc	
       # Autostart
       exec foot
       # Workspaces — switch

@@ -12,5 +12,6 @@
     ./waybar.nix
     ./foot.nix
     ./mako.nix
+    ./scripts.nix
   ];
 }
