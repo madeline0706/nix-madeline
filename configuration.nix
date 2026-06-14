@@ -9,6 +9,7 @@
     fastfetch
     git
   ];
+
   imports =
     [
       ./hardware-configuration.nix
@@ -27,7 +28,6 @@
       git commit -m "''${1:-Update config}" && \
       git push
     }
-  # Lazy part 2
     nixup() {
       cd ~/nixos-config && \
       sudo nixos-rebuild switch && \
@@ -36,6 +36,7 @@
       git push
     }
   '';
+
   # Hey hey thats me
   users.users.madeline = {
     isNormalUser = true;
@@ -44,7 +45,9 @@
       tree
     ];
   };
+
   # The best browser
   programs.firefox.enable = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "26.05";
 }
