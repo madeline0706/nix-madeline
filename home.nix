@@ -11,6 +11,16 @@
     bemenu
     j4-dmenu-desktop
   ];
+
+xdg.portal = {
+  enable = true;
+  extraPortals = with pkgs; [
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-termfilechooser
+  ];
+  config.common."org.freedesktop.impl.portal.FileChooser" = "termfilechooser";
+};
+
   imports = [
     ./sway.nix 
     ./waybar.nix

@@ -43,6 +43,7 @@
       bindsym $mod+z exec grimshot-ss --notify savecopy area
       bindsym $mod+x exec grimshot-rc	
       # Autostart
+      exec arrpc
       exec foot
       # Workspaces — switch
       bindsym $mod+1 workspace number 1
