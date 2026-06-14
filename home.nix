@@ -5,6 +5,7 @@
   home.packages = with pkgs; [
     terminus_font
     playerctl
+    libnotify
   ];
   imports = [
     ./sway.nix 

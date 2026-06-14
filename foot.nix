@@ -9,7 +9,7 @@
         pad = "10x10";
       };
 
-      colors = {
+      colors-dark = {
         background = "000000";
         foreground = "d3d3d3";
         alpha = "0.9";
