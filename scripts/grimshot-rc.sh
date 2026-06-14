@@ -1,70 +1,91 @@
-#!/bin/sh
-PATH="/run/current-system/sw/bin:/run/wrappers/bin:$PATH"
+#!/usr/bin/env bash
+
+export PATH="/run/current-system/sw/bin:/run/wrappers/bin:/usr/bin:/bin:$PATH"
+
 R2_ENV="$HOME/.config/grimshot/env"
-if [ -f "$R2_ENV" ]; then
-  . "$R2_ENV"
-else
-  echo "Warning: R2 config not found at $R2_ENV — upload will be skipped" >&2
-fi
+[ -f "$R2_ENV" ] && . "$R2_ENV"
+
 RECORDINGS_DIR="$HOME/Recordings"
 mkdir -p "$RECORDINGS_DIR"
+
 play_sound() {
   [ -n "$SOUND" ] && [ -f "$SOUND" ] && paplay "$SOUND" &
 }
-uploadToR2() {
-  FILE="$1"
-  if [ -z "$R2_ACCOUNT_ID" ] || [ -z "$R2_BUCKET" ]; then
-    echo "R2 not configured, skipping upload" >&2
-    return 1
-  fi
-  FILENAME=$(basename "$FILE")
-  PROFILE="${AWS_PROFILE:-r2}"
-  ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
-  S3_KEY="recordings/${FILENAME}"
-  PUBLIC_URL="${R2_PUBLIC_BASE_URL%/}/${S3_KEY}"
-  if aws s3 cp "$FILE" "s3://${R2_BUCKET}/${S3_KEY}" \
-    --endpoint-url "$ENDPOINT" \
-    --profile "$PROFILE" \
+
+upload_to_r2() {
+  local file="$1"
+  local filename endpoint s3_key public_url
+
+  [ -z "$R2_ACCOUNT_ID" ] || [ -z "$R2_BUCKET" ] || [ -z "$R2_PUBLIC_BASE_URL" ] && return 1
+
+  filename=$(basename "$file")
+  endpoint="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+  s3_key="recordings/${filename}"
+  public_url="${R2_PUBLIC_BASE_URL%/}/${s3_key}"
+
+  aws s3 cp "$file" "s3://${R2_BUCKET}/${s3_key}" \
+    --endpoint-url "$endpoint" \
+    --profile "${AWS_PROFILE:-r2}" \
     --content-type "video/mp4" \
-    --no-progress > /dev/null 2>&1; then
-    echo "$PUBLIC_URL"
-    return 0
+    --no-progress > /dev/null 2>&1 || return 1
+
+  echo "$public_url"
+}
+
+stop_recording() {
+  local pid
+  pid=$(grep -rl wf-recorder /proc/*/cmdline 2>/dev/null | grep -v "$$" | head -1 | cut -d/ -f3)
+
+  [ -z "$pid" ] && { notify-send -t 3000 -a recorder "Recorder" "No recording found"; exit 1; }
+
+  kill -INT "$pid"
+  while [ -d "/proc/$pid" ]; do sleep 0.1; done
+
+  play_sound
+
+  local file
+  file=$(find "$RECORDINGS_DIR" -maxdepth 1 -name '*.mp4' -printf '%T@ %p\n' \
+    | sort -rn | head -1 | cut -d' ' -f2-)
+
+  [ -z "$file" ] && { notify-send -t 3000 -a recorder "Recorder" "No file found"; exit 1; }
+
+  local url
+  url=$(upload_to_r2 "$file")
+
+  if [ -n "$url" ]; then
+    printf '%s' "$url" | wl-copy
+    notify-send -t 4000 -a recorder "Recording saved" "URL copied to clipboard"
   else
-    echo "R2 upload failed" >&2
-    return 1
+    notify-send -t 4000 -a recorder "Recording saved" "Upload failed — kept locally"
   fi
 }
-if pgrep -f wf-recorder > /dev/null; then
-  PID=$(pgrep -f wf-recorder | head -1)
-  kill -SIGINT "$PID"
-  while kill -0 "$PID" 2>/dev/null; do
-    sleep 0.2
-  done
-  play_sound
-  FILE=$(find "$RECORDINGS_DIR" -maxdepth 1 -name '*.mp4' -printf '%T@ %p\n' \
-    | sort -rn | head -1 | cut -d' ' -f2-)
-  if [ -n "$FILE" ]; then
-    PUBLIC_URL=$(uploadToR2 "$FILE")
-    if [ -n "$PUBLIC_URL" ]; then
-      printf '%s' "$PUBLIC_URL" | wl-copy
-      notify-send -t 4000 -a recorder "Recording saved" "URL copied to clipboard"
-    else
-      notify-send -t 4000 -a recorder "Recording saved" "Upload failed — file kept locally"
-    fi
-  fi
-else
-  FILENAME=$(cat /proc/sys/kernel/random/uuid)
-  FILE="$RECORDINGS_DIR/${FILENAME}.mp4"
-  SINK="$(pactl get-default-sink).monitor"
+
+start_recording() {
+  local file sink geometry
+
+  file="$RECORDINGS_DIR/$(cat /proc/sys/kernel/random/uuid).mp4"
+  sink="$(pactl get-default-sink).monitor"
+  geometry=$(swaymsg -t get_outputs \
+    | jq -r '.[] | select(.focused) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')
+
   play_sound
   sleep 0.5
+
   wf-recorder \
-    --audio="$SINK" \
+    --audio="$sink" \
     --framerate=120 \
     --codec=libx264 \
-    --file="$FILE" \
-    --geometry="$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .rect | "\(.x),\(.y) \(.width)x\(.height)"')" \
+    --file="$file" \
+    --geometry="$geometry" \
     -p preset=fast \
     -p crf=18 &
+
   notify-send -t 3000 -a recorder "Recording started" "$(date +%H:%M:%S)"
+}
+
+# Main
+if grep -rl wf-recorder /proc/*/cmdline 2>/dev/null | grep -qv "$$"; then
+  stop_recording
+else
+  start_recording
 fi
