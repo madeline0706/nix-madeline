@@ -49,5 +49,15 @@
   # The best browser
   programs.firefox.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # PipeWire
+  security.rtkit.enable = true;
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
   system.stateVersion = "26.05";
 }

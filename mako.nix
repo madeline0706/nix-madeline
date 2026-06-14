@@ -14,7 +14,7 @@
       margin = "12";
       default-timeout = 6000;
       anchor = "top-right";
-      on-notify = "exec paplay /usr/share/sounds/freedesktop/stereo/message.oga";
+      on-notify = "exec ${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/message.oga";
 
       "urgency=low" = {
         background-color = "#0d0d0d";
