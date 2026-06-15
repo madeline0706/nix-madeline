@@ -21,7 +21,7 @@
           swaybar_command waybar
       }
       # Testing
-      bindsym $mod+l exec swaylock -f --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5
+      bindsym $mod+l exec swaylock -f --color 000000 --font 'Terminus' --font-size 22 --indicator --indicator-radius 90 --indicator-thickness 7 --ring-color 1a1a1a --key-hl-color 8b3a5a --line-color 000000 --inside-color 000000 --separator-color 000000 --text-color 8b3a5a --clock --timestr '%H:%M:%S' --datestr '%Y-%m-%d' --indicator-idle-visible
 
       # Launch app launcher
       bindsym $mod+m exec j4-dmenu-desktop --dmenu="bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'"
@@ -36,7 +36,7 @@
       # Reload
       bindsym $mod+r reload
       # Lock screen
-      bindsym $mod+Escape exec swaylock -f --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5
+      bindsym $mod+Escape exec swaylock -f --color 000000 --font 'Terminus' --font-size 22 --indicator --indicator-radius 90 --indicator-thickness 7 --ring-color 1a1a1a --key-hl-color 8b3a5a --line-color 000000 --inside-color 000000 --separator-color 000000 --text-color 8b3a5a --clock --timestr '%H:%M:%S' --datestr '%Y-%m-%d' --indicator-idle-visible
       # Brightness keys
       bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
       bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
@@ -50,10 +50,10 @@
       # Autostart
       exec arrpc
       exec swayidle -w \
-          timeout 300 'swaylock -f --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5' \
+          timeout 300 'swaylock -f --color 000000 --font 'Terminus' --font-size 22 --indicator --indicator-radius 90 --indicator-thickness 7 --ring-color 1a1a1a --key-hl-color 8b3a5a --line-color 000000 --inside-color 000000 --separator-color 000000 --text-color 8b3a5a --clock --timestr '%H:%M:%S' --datestr '%Y-%m-%d' --indicator-idle-visible' \
           timeout 600 'swaymsg "output * dpms off"' \
           resume 'swaymsg "output * dpms on"' \
-          before-sleep 'swaylock -f --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5'
+          before-sleep 'swaylock -f --color 000000 --font 'Terminus' --font-size 22 --indicator --indicator-radius 90 --indicator-thickness 7 --ring-color 1a1a1a --key-hl-color 8b3a5a --line-color 000000 --inside-color 000000 --separator-color 000000 --text-color 8b3a5a --clock --timestr '%H:%M:%S' --datestr '%Y-%m-%d' --indicator-idle-visible'
       for_window [class=".*"] inhibit_idle fullscreen
       for_window [app_id=".*"] inhibit_idle fullscreen
       exec foot
