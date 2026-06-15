@@ -13,6 +13,7 @@
   # Hardware
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth.enable = false;
 
   # Power management
   services.tlp = {
