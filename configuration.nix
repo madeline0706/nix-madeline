@@ -1,4 +1,5 @@
 # Dell Pro 14 NixOS config
+#
 
 { config, lib, pkgs, ... }:
 {
