@@ -4,6 +4,7 @@
 {
   security.pam.services.waylock = {};
   programs.sway.enable = true;
+  services.tailscale.enable = true;
   services.displayManager.ly.enable = true;
   environment.systemPackages = with pkgs; [
     waybar
