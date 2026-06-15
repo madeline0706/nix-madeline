@@ -29,4 +29,4 @@ Logging into tailscale
 
 Logging into firefox to sync
 
-
+aws configure --profile r2
