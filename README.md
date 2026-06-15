@@ -31,5 +31,5 @@ AWS_PROFILE=""
 ```
 
 # Screenshots
+<img width="1923" height="1080" alt="image" src="https://github.com/user-attachments/assets/22e97407-4cee-400d-a12e-f69bb08f0ee3" />
 
-https://arcanine.spellbound.sh/screenshots/728b-1144-821d.png
