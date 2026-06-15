@@ -64,6 +64,10 @@
       bindsym $mod+down focus down
       bindsym $mod+up focus up
       bindsym $mod+right focus right
+      bindsym $mod+h splith
+      bindsym $mod+v splitv
+      bindsym $mod+f fullscreen
+      bindsym $mod+Shift+f floating toggle
       # Workspaces — switch
       bindsym $mod+1 workspace number 1
       bindsym $mod+2 workspace number 2
