@@ -44,6 +44,11 @@
       bindsym $mod+x exec grimshot-rc	
       # Autostart
       exec arrpc
+      exec swayidle -w \
+          timeout 300 'swaymsg "output * dpms off"' \
+          resume 'swaymsg "output * dpms on"'
+      for_window [class=".*"] inhibit_idle fullscreen
+      for_window [app_id=".*"] inhibit_idle fullscreen
       exec foot
       # Workspaces — switch
       bindsym $mod+1 workspace number 1

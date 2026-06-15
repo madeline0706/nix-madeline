@@ -9,6 +9,7 @@
     lf
     bemenu
     j4-dmenu-desktop
+    swayidle
     xdg-desktop-portal-termfilechooser
     chafa
     file
