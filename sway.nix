@@ -20,7 +20,9 @@
       bar {
           swaybar_command waybar
       }
-      # Menu
+      # Testing
+      bindsym $mod+l exec swaylock -f --screenshots --clock --indicator --effect-blur 7x5 --effect-vignette 0.5:0.5
+
       # Launch app launcher
       bindsym $mod+m exec j4-dmenu-desktop --dmenu="bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'"
       # Launch terminal
