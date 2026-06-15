@@ -1,6 +1,7 @@
 # nixos-dellpro14
 My NixOS configuration for my Dell Pro 14.
-
+I am still learning Nix & NixOS, and this will eventually also serve as the config
+for my desktop.
 
 # Design Philosophy
 
