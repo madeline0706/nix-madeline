@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 {
   home.packages = with pkgs; [
-    swaylock-effects
   ];
 
   wayland.windowManager.sway = {
@@ -20,9 +19,6 @@
       bar {
           swaybar_command waybar
       }
-      # Testing
-      bindsym $mod+l exec swaylock -f --color 000000 --font 'Terminus' --font-size 12 --text-color 8b3a5a
-
       # Launch app launcher
       bindsym $mod+m exec j4-dmenu-desktop --dmenu="bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'"
       # Launch terminal
@@ -36,7 +32,7 @@
       # Reload
       bindsym $mod+r reload
       # Lock screen
-      bindsym $mod+Escape exec swaylock -f --color 000000 --font 'Terminus' --font-size 12 --text-color 8b3a5a
+      bindsym $mod+Escape exec waylock
       # Brightness keys
       bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
       bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
@@ -50,10 +46,10 @@
       # Autostart
       exec arrpc
       exec swayidle -w \
-          timeout 300 'swaylock -f --color 000000 --font 'Terminus' --font-size 12 --text-color 8b3a5a' \
+          timeout 300 'waylock' \
           timeout 600 'swaymsg "output * dpms off"' \
           resume 'swaymsg "output * dpms on"' \
-          before-sleep 'swaylock -f --color 000000 --font 'Terminus' --font-size 12 --text-color 8b3a5a'
+          before-sleep 'waylock'
       for_window [class=".*"] inhibit_idle fullscreen
       for_window [app_id=".*"] inhibit_idle fullscreen
       exec foot
