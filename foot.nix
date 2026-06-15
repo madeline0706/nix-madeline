@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       main = {
-        font = "Terminus:size=120";
+        font = "Terminus:size=12";
         dpi-aware = "no";
         pad = "10x10";
       };
