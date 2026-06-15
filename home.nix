@@ -10,6 +10,7 @@
     bemenu
     j4-dmenu-desktop
     xdg-desktop-portal-termfilechooser
+    chafa
   ];
 
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
@@ -27,6 +28,31 @@
       path="$4"
       out="$5"
       foot --app-id=filechooser -- sh -c "LF_CHOOSER_FILE='$out' lf '$path'"
+    '';
+  };
+
+  xdg.configFile."lf/lfrc".text = ''
+    set previewer ~/.config/lf/previewer
+    set sixel true
+
+    cmd open &{{
+      if [ -n "$LF_CHOOSER_FILE" ]; then
+        echo "$f" > "$LF_CHOOSER_FILE"
+        lf -remote "send $id quit"
+      else
+        xdg-open "$f"
+      fi
+    }}
+  '';
+
+  xdg.configFile."lf/previewer" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      case "$(file -Lb --mime-type -- "$1")" in
+        image/*) chafa -f sixel -s "$2x$3" --animate off --polite on -t 1 --bg black "$1" ;;
+        text/*) cat "$1" ;;
+      esac
     '';
   };
 
