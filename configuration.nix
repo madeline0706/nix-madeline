@@ -10,6 +10,7 @@
     fastfetch
     git
     pulsemixer
+    tailscale
   ];
 
   imports =
