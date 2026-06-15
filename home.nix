@@ -17,6 +17,8 @@
     portablemc
     waybar
     fastfetch
+    btop
+    ncdu
   ];
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
     [filechooser]
