@@ -27,6 +27,18 @@
       #workspaces button.focused {
         color: #cc3333;
       }
+      #battery {
+        padding: 0 10px;
+        color: #5a3693;
+        background-color: #0a0a0a;
+      }
+      #battery.warning {
+        color: #cc3333;
+      }
+      #battery.critical {
+        color: #cc3333;
+        font-weight: bold;
+      }
     '';
     settings = {
       mainBar = {
@@ -35,20 +47,30 @@
         height = 24;
         modules-left = [ "sway/workspaces" "mpris" ];
         modules-center = [ "clock" ];
-        modules-right = [ "custom/sysinfo" "pulseaudio" "network" ];
+        modules-right = [ "custom/sysinfo" "pulseaudio" "network" "battery" ];
         clock = {
           format = "{:%Y-%m-%d %I:%M %p}";
           tooltip-format = "<tt>{calendar}</tt>";
         };
         network = {
-          format-ethernet = "ETH";
-          format-wifi = "WiFi {signalStrength}%";
+          format-ethernet = "ETHR";
+          format-wifi = "WIFI {signalStrength}%";
           format-disconnected = "DISCONNECTED";
         };
         pulseaudio = {
-          format = "VOL {volume}%";
+          format = "VLME {volume}%";
           format-muted = "MUTED";
           on-click = "foot -e pulsemixer";
+        };
+        battery = {
+          format = "BATR {capacity}%";
+          format-charging = "CHRG {capacity}%";
+          format-warning = "WARN {capacity}%";
+          format-critical = "CRIT {capacity}%";
+          states = {
+            warning = 30;
+            critical = 15;
+          };
         };
         mpris = {
           format = "> {artist} — {title}";
