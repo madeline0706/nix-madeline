@@ -59,10 +59,10 @@
     '';
   };
   imports = [
-    ./sway.nix
-    ./waybar.nix
-    ./foot.nix
-    ./mako.nix
+    ./desktop/sway.nix
+    ./desktop/waybar.nix
+    ./desktop/foot.nix
+    ./desktop/mako.nix
     ./scripts.nix
   ];
 }
