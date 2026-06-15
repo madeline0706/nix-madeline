@@ -19,6 +19,11 @@
       bar {
           swaybar_command waybar
       }
+
+      # Input
+      input type:touchpad {
+          dwt disabled
+      }
       # Launch app launcher
       bindsym $mod+m exec j4-dmenu-desktop --dmenu="bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'"
       # Launch terminal
