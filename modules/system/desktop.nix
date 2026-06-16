@@ -26,6 +26,7 @@
     btop
     ncdu
     pulsemixer
+    unzip
     tailscale
   ];
 
