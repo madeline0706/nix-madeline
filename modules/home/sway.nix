@@ -102,7 +102,7 @@
 
       startup = [
         { command = "arrpc"; }
-	{ command = "swayidle -w timeout 180 'waylock' timeout 900 'systemctl suspend' timeout 3600 'systemctl poweroff' resume 'swaymsg \"output * dpms on\"'"; }
+	{ command = "swayidle -w timeout 18 'waylock' timeout 90 'systemctl suspend' timeout 360 'systemctl poweroff' resume 'swaymsg \"output * dpms on\"'"; }
 	#{ command = "swayidle -w timeout 300 'waylock' timeout 600 'swaymsg \"output * dpms off\"' timeout 900 'systemctl suspend' timeout 3600 'systemctl poweroff' resume 'swaymsg \"output * dpms on\"'"; }
         #{ command = "swayidle -w timeout 300 'waylock' timeout 600 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' before-sleep 'waylock'"; }
         { command = "foot"; }
