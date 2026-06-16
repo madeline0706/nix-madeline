@@ -3,7 +3,7 @@
   wayland.windowManager.sway.config.output = {
     "DP-3" = {
       resolution = "2560x1440";
-      refresh = "240";
+      mode = "240";
     };
   };
 }
