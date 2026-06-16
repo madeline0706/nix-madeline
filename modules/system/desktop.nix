@@ -1,4 +1,4 @@
-# Shared desktop config (Sway + Wayland stack)
+# Shared desktop config
 { config, lib, pkgs, ... }:
 
 {
