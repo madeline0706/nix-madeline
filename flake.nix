@@ -11,7 +11,7 @@
 
   outputs = { self, nixpkgs, home-manager, ... }:
     let
-      mkHost = { system, hostname, extraModules ? [] }:
+      mkHost = { system, hostname, extraModules ? [], homeModules ? [] }:
         nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
@@ -22,7 +22,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.madeline = import ./modules/home;
+              home-manager.users.madeline = { imports = [ ./modules/home ] ++ homeModules; };
             }
           ] ++ extraModules;
         };
@@ -32,11 +32,13 @@
         arcanine-nix = mkHost {
           system = "x86_64-linux";
           hostname = "arcanine-nix";
+          homeModules = [ ./hosts/arcanine-nix/displays.nix ];
         };
 
         bulbasaur-nix = mkHost {
           system = "x86_64-linux";
           hostname = "bulbasaur-nix";
+          homeModules = [ ./hosts/bulbasaur-nix/displays.nix ];
         };
       };
     };
