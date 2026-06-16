@@ -5,7 +5,7 @@
   time.timeZone = "America/Los_Angeles";
   users.users.madeline = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "video" ];
     packages = with pkgs; [
       tree
     ];
