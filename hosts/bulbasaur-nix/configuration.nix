@@ -10,4 +10,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "bulbasaur-nix";
+
+  # Use latest kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # AMD GPU
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
 }

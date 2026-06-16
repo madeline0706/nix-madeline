@@ -16,14 +16,14 @@
 
   programs.bash.interactiveShellInit = ''
     nixpush() {
-      cd ~/nixos-config && \
+      cd ~/Nix && \
       git add . && \
       git commit -m "''${1:-Update config}" && \
       git push
     }
 
     nixup() {
-      cd ~/nixos-config && \
+      cd ~/Nix && \
       git add . && \
       sudo nixos-rebuild switch --flake .#$(hostname) && \
       git commit -m "''${1:-Update config}" && \
