@@ -71,5 +71,6 @@
     ./foot.nix
     ./mako.nix
     ./scripts.nix
+    ./claude.nix
   ];
 }
