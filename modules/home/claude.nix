@@ -5,12 +5,4 @@
     claude-code
     mcp-nixos
   ];
-
-  xdg.configFile."claude-code/mcp.json".text = builtins.toJSON {
-    mcpServers = {
-      nixos = {
-        command = "mcp-nixos";
-      };
-    };
-  };
 }
