@@ -8,6 +8,8 @@
     checkConfig = false;
     config = {
       modifier = "Mod1";
+      
+      defaultWorkspace = "1";
 
       fonts = {
         names = [ "monospace" ];
