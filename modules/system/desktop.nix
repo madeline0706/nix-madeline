@@ -3,7 +3,10 @@
 {
   programs.sway.enable = true;
 
-  services.displayManager.ly.enable = true;
+  services.displayManager.ly = {
+    enable = true;
+    settings.session_log = null;
+  };
 
   services.tailscale.enable = true;
 
