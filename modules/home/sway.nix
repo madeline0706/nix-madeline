@@ -113,9 +113,7 @@ in
       startup = [
         { command = "${random-wallpaper}/bin/random-wallpaper"; always = true; }
         { command = "arrpc"; }
-	{ command = "swayidle -w timeout 180 'waylock' timeout 900 'systemctl suspend' timeout 3600 'systemctl poweroff' resume 'swaymsg \"output * dpms on\"'"; }
-	#{ command = "swayidle -w timeout 300 'waylock' timeout 600 'swaymsg \"output * dpms off\"' timeout 900 'systemctl suspend' timeout 3600 'systemctl poweroff' resume 'swaymsg \"output * dpms on\"'"; }
-        #{ command = "swayidle -w timeout 300 'waylock' timeout 600 'swaymsg \"output * dpms off\"' resume 'swaymsg \"output * dpms on\"' before-sleep 'waylock'"; }
+        { command = "swayidle timeout 180 'waylock' timeout 900 'systemctl suspend' timeout 3600 'systemctl poweroff' before-sleep 'waylock' resume 'swaymsg \"output * dpms on\"'"; }
         { command = "foot"; }
       ];
 
