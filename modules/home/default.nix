@@ -67,29 +67,6 @@
   };
 
 
-  # Mute Fifine mic's hardware loopback (Mic Playback Switch) after wireplumber
-  # restores ALSA state — running before wireplumber would be undone by it.
-  systemd.user.services.mute-mic-monitoring = {
-    Unit = {
-      Description = "Mute Fifine mic direct monitoring";
-      After = [ "wireplumber.service" ];
-      Wants = [ "wireplumber.service" ];
-    };
-    Service = {
-      Type = "oneshot";
-      # head -1: /proc/asound/cards has two lines per card, both contain "fifine"
-      ExecStart = pkgs.writeShellScript "mute-mic-monitoring" ''
-        card=$(grep -i fifine /proc/asound/cards | awk '{print $1}' | head -1)
-        if [ -n "$card" ]; then
-          ${pkgs.alsa-utils}/bin/amixer -c "$card" cset "name='Mic Playback Switch'" off
-        fi
-      '';
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-  };
-
   imports = [
     ./sway.nix
     ./waybar.nix
