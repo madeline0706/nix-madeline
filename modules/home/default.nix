@@ -4,6 +4,18 @@
 
   home.file."wallpapers/.keep".text = "";
 
+  systemd.user.services.mprisence = {
+    Unit.Description = "Discord Rich Presence for MPRIS media players";
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.mprisence}/bin/mprisence";
+      Restart = "always";
+      RestartSec = 10;
+      Environment = [ "RUST_LOG=info" "RUST_BACKTRACE=1" ];
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+
   home.packages = with pkgs; [
     terminus_font
     playerctl
@@ -23,6 +35,7 @@
     btop
     ncdu
     pulsemixer
+    mprisence
   ];
 
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
