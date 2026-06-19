@@ -59,6 +59,24 @@
     pulse.enable = true;
   };
 
+  # Mute Fifine mic's direct monitoring (headphone loopback) before ly starts.
+  # The card number can vary, so we find it by name at runtime.
+  systemd.services.mute-mic-monitoring = {
+    description = "Mute microphone direct monitoring before login";
+    wantedBy = [ "ly.service" ];
+    before = [ "ly.service" ];
+    after = [ "sound.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "mute-mic-monitoring" ''
+        card=$(grep -i fifine /proc/asound/cards | awk '{print $1}')
+        if [ -n "$card" ]; then
+          ${pkgs.alsa-utils}/bin/amixer -c "$card" sset Mic Playback mute || true
+        fi
+      '';
+    };
+  };
+
   security.pam.services.waylock = {};
 
   hardware.enableRedistributableFirmware = true;
