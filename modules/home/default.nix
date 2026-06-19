@@ -38,6 +38,13 @@
     mprisence
   ];
 
+  xdg.configFile."mprisence/config.toml".text = ''
+    [web_player.navidrome]
+    match_pattern = "navi.spellbound.sh"
+    name = "Navidrome"
+    ignore = false
+  '';
+
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
     [filechooser]
     cmd=${config.home.homeDirectory}/.config/xdg-desktop-portal-termfilechooser/lf-wrapper.sh
