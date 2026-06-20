@@ -40,6 +40,10 @@
 
   xdg.configFile."mprisence/config.toml".text = ''
     [player.mozilla_firefox]
+    ignore = true
+
+    [web_player.navidrome]
+    match_pattern = "navi.spellbound.sh"
     ignore = false
     name = "Navidrome"
   '';
