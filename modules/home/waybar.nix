@@ -16,7 +16,7 @@
       }
       #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo {
         padding: 0 10px;
-	color: #ffffff;
+	color: #ffea00;
         background-color: #0a0a0a;
       }
       #workspaces button {
