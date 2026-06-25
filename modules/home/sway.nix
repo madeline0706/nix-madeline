@@ -113,7 +113,6 @@ in
         { command = "${random-wallpaper}/bin/random-wallpaper"; always = true; }
         { command = "arrpc"; }
         { command = "swayidle timeout 180 'waylock' timeout 900 'systemctl suspend' before-sleep 'waylock' resume 'swaymsg \"output * dpms on\"'"; }
-        { command = "foot"; }
       ];
 
       window.commands = [
