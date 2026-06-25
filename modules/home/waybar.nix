@@ -20,23 +20,23 @@
         background-color: #0a0a0a;
       }
       #workspaces button {
-        color: #5a3693;
+        color: #ffea00;
         padding: 0 5px;
         background-color: transparent;
       }
       #workspaces button.focused {
-        color: #cc3333;
+        color: #ffea00;
       }
       #battery {
         padding: 0 10px;
-        color: #5a3693;
+        color: #00b140;
         background-color: #0a0a0a;
       }
       #battery.warning {
-        color: #cc3333;
+        color: #ffea00;
       }
       #battery.critical {
-        color: #cc3333;
+        color: #e6001a;
         font-weight: bold;
       }
     '';
