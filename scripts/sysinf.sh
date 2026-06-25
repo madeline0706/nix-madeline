@@ -82,19 +82,17 @@ fi
 # COLORS
 color() {
     local pct=$1
-    if   [ "$pct" -lt 40 ]; then echo "#4a9e4a"
-    elif [ "$pct" -lt 60 ]; then echo "#a89a3e"
-    elif [ "$pct" -lt 80 ]; then echo "#b86820"
-    else                          echo "#cc3333"
+    if   [ "$pct" -lt 60 ]; then echo "#fff8e1"
+    elif [ "$pct" -lt 80 ]; then echo "#ffea00"
+    else                          echo "#e6001a"
     fi
 }
 cpu_color=$(color "$cpu_pct")
 ram_color=$(color "$ram_pct")
 disk_color=$(color "$disk_pct")
-if   [ "$total_mbps" -lt 10  ]; then net_color="#4a9e4a"
-elif [ "$total_mbps" -lt 50  ]; then net_color="#a89a3e"
-elif [ "$total_mbps" -lt 200 ]; then net_color="#b86820"
-else                                  net_color="#cc3333"
+if   [ "$total_mbps" -lt 50  ]; then net_color="#fff8e1"
+elif [ "$total_mbps" -lt 200 ]; then net_color="#ffea00"
+else                                  net_color="#e6001a"
 fi
 
 # OUTPUT

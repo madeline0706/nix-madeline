@@ -12,25 +12,20 @@
       }
       window#waybar {
         background-color: #0a0a0a;
-        color: #cc3333;
+        color: #fff8e1;
       }
-      #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo {
+      #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris {
         padding: 0 10px;
-	color: #ffea00;
+        color: #fff8e1;
         background-color: #0a0a0a;
       }
       #workspaces button {
-        color: #ffea00;
+        color: #fff8e1;
         padding: 0 5px;
         background-color: transparent;
       }
       #workspaces button.focused {
         color: #ffea00;
-      }
-      #battery {
-        padding: 0 10px;
-        color: #00b140;
-        background-color: #0a0a0a;
       }
       #battery.warning {
         color: #ffea00;

@@ -27,9 +27,11 @@
 
   services.power-profiles-daemon.enable = false;
 
-  services.logind.lidSwitch = "suspend";
-  services.logind.lidSwitchExternalPower = "lock";
-  services.logind.lidSwitchDocked = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "lock";
+    HandleLidSwitchDocked = "ignore";
+  };
 
   swapDevices = [{ device = "/var/swap"; size = 8192; }];
 }
