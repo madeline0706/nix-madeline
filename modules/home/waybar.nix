@@ -47,20 +47,20 @@
           tooltip-format = "<tt>{calendar}</tt>";
         };
         network = {
-          format-ethernet = "ETH";
-          format-wifi = "WIF {signalStrength}%";
-          format-disconnected = "DIS";
+          format-ethernet = "Et";
+          format-wifi = "Wi {signalStrength}%";
+          format-disconnected = "Di";
         };
         pulseaudio = {
-          format = "VOL {volume}%";
-          format-muted = "MUTED";
+          format = "Vo {volume}%";
+          format-muted = "Mu";
           on-click = "foot -e pulsemixer";
         };
         battery = {
-          format = "BAT {capacity}%";
-          format-charging = "CHRG {capacity}%";
-          format-warning = "WARN {capacity}%";
-          format-critical = "CRIT {capacity}%";
+          format = "Ba {capacity}%";
+          format-charging = "Ch {capacity}%";
+          format-warning = "Wa {capacity}%";
+          format-critical = "Cr {capacity}%";
           states = {
             warning = 30;
             critical = 15;
