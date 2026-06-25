@@ -17,7 +17,7 @@
       #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris {
         padding: 0 10px;
         color: #fff8e1;
-        background-color: rgba(10, 10, 10, 0.75);
+        background-color: transparent;
       }
       #workspaces button {
         color: #fff8e1;
