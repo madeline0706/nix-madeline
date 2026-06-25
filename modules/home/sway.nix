@@ -16,7 +16,6 @@ in
     config = {
       modifier = "Mod4";
       
-      defaultWorkspace = "1";
 
       fonts = {
         names = [ "monospace" ];
@@ -110,6 +109,7 @@ in
       };
 
       startup = [
+        { command = "swaymsg workspace number 1"; }
         { command = "${random-wallpaper}/bin/random-wallpaper"; always = true; }
         { command = "arrpc"; }
         { command = "swayidle timeout 180 'waylock' timeout 900 'systemctl suspend' before-sleep 'waylock' resume 'swaymsg \"output * dpms on\"'"; }
