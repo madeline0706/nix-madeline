@@ -53,6 +53,7 @@ in
     btop
     ncdu
     pulsemixer
+    vscodium
     mprisence
   ];
 
