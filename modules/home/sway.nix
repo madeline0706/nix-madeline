@@ -73,8 +73,8 @@ in
         "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
         "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         # Screenshots
-        "${mod}+z" = "exec grimshot-ss --notify savecopy area";
-        "${mod}+x" = "exec grimshot-rc";
+        "${mod}+z" = "exec nixshot ss --notify savecopy area";
+        "${mod}+x" = "exec nixshot rc";
         # Navigation
         "${mod}+left" = "focus left";
         "${mod}+down" = "focus down";
