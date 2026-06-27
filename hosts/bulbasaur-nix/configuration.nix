@@ -1,10 +1,10 @@
-# Host-specific config for bulbasaur-nix (Desktop)
 { config, lib, pkgs, ... }:
-
 {
   imports = [
     ./hardware-configuration.nix
   ];
+
+  home-manager.users.madeline.imports = [ ./displays.nix ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -14,7 +14,7 @@
   programs.steam.enable = true;
 
   # DRM Log noise in Ly
-  boot.consoleLogLevel =3;
+  boot.consoleLogLevel = 3;
   # AMD GPU
   hardware.graphics = {
     enable = true;

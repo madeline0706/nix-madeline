@@ -11,40 +11,12 @@
       url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
   };
 
-  outputs = { self, nixpkgs, home-manager, nyx, ... }:
-    let
-      mkHost = { system, hostname, extraModules ? [], homeModules ? [] }:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./hosts/${hostname}/configuration.nix
-            ./modules/system/common.nix
-            ./modules/system/desktop.nix
-            nyx.nixosModules.default
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.madeline = { imports = [ ./modules/home ] ++ homeModules; };
-            }
-          ] ++ extraModules;
-        };
-    in
-    {
-      nixosConfigurations = {
-        arcanine-nix = mkHost {
-          system = "x86_64-linux";
-          hostname = "arcanine-nix";
-          homeModules = [ ./hosts/arcanine-nix/displays.nix ];
-        };
-
-        bulbasaur-nix = mkHost {
-          system = "x86_64-linux";
-          hostname = "bulbasaur-nix";
-          homeModules = [ ./hosts/bulbasaur-nix/displays.nix ];
-        };
-      };
-    };
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+    systems = [ "x86_64-linux" ];
+    imports = (inputs.import-tree ./parts).imports;
+  };
 }
