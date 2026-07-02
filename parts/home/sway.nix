@@ -59,7 +59,7 @@
           # Kill
           "${mod}+q" = "kill";
           # Exit sway
-          "${mod}+Shift+e" = "exit";
+          "${mod}+Shift+p" = "exit";
           # Reload
           "${mod}+r" = "reload";
           # Lock screen
