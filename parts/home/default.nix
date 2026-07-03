@@ -59,7 +59,7 @@
 
     xdg.configFile."mprisence/config.toml".text = ''
       [web_player.navidrome]
-      match_pattern = "navi.spellbound.sh"
+      match_pattern = "navidrome.spellbound.sh"
       ignore = false
       name = "Navidrome"
     '';
