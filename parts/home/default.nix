@@ -63,8 +63,14 @@
       footclient = { name = "Foot Client"; noDisplay = true; };
       nixos-manual = { name = "NixOS Manual"; noDisplay = true; };
       lf = { name = "lf"; noDisplay = true; };
-      mpv = { name = "mpv Media Player"; noDisplay = true; };
     };
+
+    home.file.".local/share/applications/mpv.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=mpv Media Player
+      NoDisplay=true
+    '';
 
     xdg.configFile."mprisence/config.toml".text = ''
       [web_player.navidrome]
