@@ -57,6 +57,13 @@
       mprisence
     ];
 
+    xdg.desktopEntries = {
+      foot = { name = "Foot"; noDisplay = true; };
+      foot-server = { name = "Foot Server"; noDisplay = true; };
+      footclient = { name = "Foot Client"; noDisplay = true; };
+      nixos-manual = { name = "NixOS Manual"; noDisplay = true; };
+    };
+
     xdg.configFile."mprisence/config.toml".text = ''
       [web_player.navidrome]
       match_pattern = "navidrome.spellbound.sh"
