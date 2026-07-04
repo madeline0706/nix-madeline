@@ -62,6 +62,8 @@
       foot-server = { name = "Foot Server"; noDisplay = true; };
       footclient = { name = "Foot Client"; noDisplay = true; };
       nixos-manual = { name = "NixOS Manual"; noDisplay = true; };
+      lf = { name = "lf"; noDisplay = true; };
+      mpv = { name = "mpv Media Player"; noDisplay = true; };
     };
 
     xdg.configFile."mprisence/config.toml".text = ''
