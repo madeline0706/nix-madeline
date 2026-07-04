@@ -65,6 +65,16 @@
       lf = { name = "lf"; noDisplay = true; };
     };
 
+    home.file.".local/share/applications/btop.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Btop
+      Icon=btop
+      Exec=btop
+      Terminal=true
+      Categories=System;Monitor;ConsoleOnly;
+    '';
+
     home.file.".local/share/applications/mpv.desktop".text = ''
       [Desktop Entry]
       Type=Application
