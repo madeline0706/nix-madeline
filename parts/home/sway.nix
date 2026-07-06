@@ -8,12 +8,11 @@
     '';
     idle-daemon = pkgs.writeShellScriptBin "idle-daemon" ''
       pkill swayidle || true
-      exec ${pkgs.swayidle}/bin/swayidle \
+      exec ${pkgs.swayidle}/bin/swayidle -w \
         timeout 10 'waylock' \
-        timeout 15 'swaymsg "output * dpms off"' \
+        timeout 15 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
         timeout 20 'systemctl suspend' \
-        before-sleep 'waylock' \
-        resume 'swaymsg "output * dpms on"'
+        before-sleep 'waylock'
     '';
   in
   {
