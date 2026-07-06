@@ -10,9 +10,10 @@
 	git
       ];
     };
-    programs.bash.interactiveShellInit = ''
+    programs.bash.promptInit = ''
       PS1='[\u@\h] \w\n> '
-
+    '';
+    programs.bash.interactiveShellInit = ''
       nixpush() {
         cd ~/Nix && \
         git add . && \
