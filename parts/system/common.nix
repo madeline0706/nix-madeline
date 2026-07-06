@@ -11,7 +11,7 @@
       ];
     };
     programs.bash.promptInit = ''
-      PS1='[\u@\h] \w\n> '
+      PS1='\[\e[1m\][\u@\h] \w\n> \[\e[0m\]'
     '';
     programs.bash.interactiveShellInit = ''
       nixpush() {
