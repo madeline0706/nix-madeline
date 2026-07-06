@@ -11,6 +11,8 @@
       ];
     };
     programs.bash.interactiveShellInit = ''
+      PS1='[\u@\h] \w\n> '
+
       nixpush() {
         cd ~/Nix && \
         git add . && \
