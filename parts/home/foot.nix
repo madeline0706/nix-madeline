@@ -75,25 +75,25 @@
       '';
 
       air = mkTheme "air" ''
-        alpha=0.95
-        foreground=2b3a44
-        background=e9f1f5
-        regular0=c9d6de
-        regular1=bd5a55
-        regular2=4f9a6a
-        regular3=a5842f
-        regular4=3f7cb0
-        regular5=8a5fa0
-        regular6=3f9aa8
-        regular7=3a4a54
-        bright0=b3c4ce
-        bright1=d0736e
-        bright2=63b07f
-        bright3=c09a3f
-        bright4=5a95c8
-        bright5=a077b8
-        bright6=57b3c0
-        bright7=1f2a32
+        alpha=0.9
+        foreground=cdd9e0
+        background=0c1418
+        regular0=1c2a30
+        regular1=c56b66
+        regular2=6fae86
+        regular3=c2a25f
+        regular4=5f9cc8
+        regular5=9a83b8
+        regular6=5fb3c0
+        regular7=b7c6ce
+        bright0=32424a
+        bright1=e08a84
+        bright2=8fcfa4
+        bright3=e0c07f
+        bright4=7fbce8
+        bright5=b7a3d8
+        bright6=7fd3e0
+        bright7=e6f0f4
       '';
 
       leaf = mkTheme "leaf" ''
@@ -125,19 +125,61 @@
         (lib.mapAttrsToList (name: file: "cp ${file} $out/${name}.ini") themes)}
     '';
 
-    # Picks a random theme and writes it to the mutable file that foot.ini
-    # includes. foot can't reload its config from disk, so only foot windows
-    # opened after this runs pick up the new theme.
-    random-foot-theme = pkgs.writeShellScriptBin "random-foot-theme" ''
-      theme=$(find ${themesDir} -name '*.ini' | shuf -n 1)
+    # `theme`        -> list available themes
+    # `theme <name>` -> switch to <name>: write it for future foot windows and
+    #                   recolor the current terminal live via OSC escapes.
+    theme = pkgs.writeShellScriptBin "theme" ''
+      themes_dir=${themesDir}
+
+      list() {
+        echo "Available themes:"
+        for f in "$themes_dir"/*.ini; do
+          printf '  %s\n' "$(basename "$f" .ini)"
+        done
+      }
+
+      if [ $# -eq 0 ]; then
+        list
+        exit 0
+      fi
+
+      src="$themes_dir/$1.ini"
+      if [ ! -f "$src" ]; then
+        echo "Unknown theme: $1" >&2
+        list >&2
+        exit 1
+      fi
+
       mkdir -p "$HOME/.config/foot"
-      cp -f "$theme" "$HOME/.config/foot/theme.ini"
+      cp -f "$src" "$HOME/.config/foot/theme.ini"
+
+      # Recolor the terminal this command is running in.
+      if [ -t 1 ]; then
+        while IFS='=' read -r key val; do
+          case "$key" in
+            regular[0-7]) printf '\033]4;%d;#%s\033\\' "''${key#regular}" "$val" ;;
+            bright[0-7])  printf '\033]4;%d;#%s\033\\' "$(( ''${key#bright} + 8 ))" "$val" ;;
+            foreground)   printf '\033]10;#%s\033\\' "$val" ;;
+            background)   printf '\033]11;#%s\033\\' "$val" ;;
+          esac
+        done < "$src"
+      fi
+
+      echo "Theme set to $1 (new foot windows use it; other open windows unchanged)"
+    '';
+
+    # Picks a random theme on sway reload. foot can't reload its config from
+    # disk, so only foot windows opened after this runs pick up the new theme.
+    random-foot-theme = pkgs.writeShellScriptBin "random-foot-theme" ''
+      pick=$(find ${themesDir} -name '*.ini' | shuf -n 1)
+      mkdir -p "$HOME/.config/foot"
+      cp -f "$pick" "$HOME/.config/foot/theme.ini"
     '';
   in
   {
     programs.foot.enable = true;
 
-    home.packages = [ random-foot-theme ];
+    home.packages = [ theme random-foot-theme ];
 
     # Own the config directly (instead of programs.foot.settings) so we can put
     # the top-level `include` before any section.
