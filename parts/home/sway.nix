@@ -6,6 +6,15 @@
       wallpaper=$(find "$HOME/wallpapers" -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.webp" \) 2>/dev/null | shuf -n 1)
       [ -n "$wallpaper" ] && ${pkgs.swaybg}/bin/swaybg -i "$wallpaper" -m fill &
     '';
+    idle-daemon = pkgs.writeShellScriptBin "idle-daemon" ''
+      pkill swayidle || true
+      exec ${pkgs.swayidle}/bin/swayidle \
+        timeout 10 'waylock' \
+        timeout 15 'swaymsg "output * dpms off"' \
+        timeout 20 'systemctl suspend' \
+        before-sleep 'waylock' \
+        resume 'swaymsg "output * dpms on"'
+    '';
   in
   {
     home.packages = with pkgs; [
@@ -113,7 +122,7 @@
           { command = "${random-wallpaper}/bin/random-wallpaper"; always = true; }
           { command = "rm ~/ly-session.log"; }
           { command = "arrpc"; }
-          { command = "pkill swayidle; swayidle timeout 10 'waylock' timeout 15 'swaymsg \"output * dpms off\"' timeout 20 'systemctl suspend' before-sleep 'waylock' resume 'swaymsg \"output * dpms on\"'"; always = true; }
+          { command = "${idle-daemon}/bin/idle-daemon"; always = true; }
         ];
 
         window.commands = [
