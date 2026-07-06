@@ -119,6 +119,7 @@
         startup = [
           { command = "swaymsg workspace number 1"; }
           { command = "${random-wallpaper}/bin/random-wallpaper"; always = true; }
+          { command = "random-foot-theme"; always = true; }
           { command = "rm ~/ly-session.log"; }
           { command = "arrpc"; }
           { command = "${idle-daemon}/bin/idle-daemon"; always = true; }
