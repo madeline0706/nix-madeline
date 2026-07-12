@@ -83,10 +83,10 @@
     '';
 
     xdg.configFile."mprisence/config.toml".text = ''
-      [web_player.navidrome]
-      match_pattern = "navidrome.spellbound.sh"
+      [web_player.siren]
+      match_pattern = "siren.spellbound.sh"
       ignore = false
-      name = "Navidrome"
+      name = "Siren"
     '';
 
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
