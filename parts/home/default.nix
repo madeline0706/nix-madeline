@@ -87,6 +87,11 @@
       match_pattern = "siren.spellbound.sh"
       ignore = false
       name = "Siren"
+
+      [web_player.feishin]
+      match_pattern = "localhost"
+      ignore = false
+      name = "Feishin"
     '';
 
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
