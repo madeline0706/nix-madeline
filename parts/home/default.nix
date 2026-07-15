@@ -83,13 +83,8 @@
     '';
 
     xdg.configFile."mprisence/config.toml".text = ''
-      [web_player.siren]
-      match_pattern = "siren.spellbound.sh"
-      ignore = false
-      name = "Siren"
-
       [web_player.feishin]
-      match_pattern = "localhost"
+      match_pattern = "feishin.spellbound.sh"
       ignore = false
       name = "Feishin"
     '';
