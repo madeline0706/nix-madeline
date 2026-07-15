@@ -8,6 +8,7 @@
       packages = with pkgs; [
         tree
 	git
+	speedtest-rs
       ];
     };
     programs.bash.promptInit = ''
