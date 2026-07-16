@@ -37,6 +37,7 @@
 
     home.packages = with pkgs; [
       terminus_font
+      aseprite
       playerctl
       libnotify
       arrpc
