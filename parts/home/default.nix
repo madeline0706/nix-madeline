@@ -88,6 +88,7 @@
       match_pattern = "feishin.spellbound.sh"
       ignore = false
       name = "Feishin"
+      app_id = "1525881474077819071"
     '';
 
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
