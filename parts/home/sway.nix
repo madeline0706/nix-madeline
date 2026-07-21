@@ -123,6 +123,8 @@
           { command = "rm ~/ly-session.log"; }
           { command = "arrpc"; }
           { command = "${idle-daemon}/bin/idle-daemon"; always = true; }
+          # Fibonacci spiral tiling: flips each new split between h/v by aspect ratio
+          { command = "${pkgs.autotiling}/bin/autotiling"; always = true; }
         ];
 
         window.commands = [
