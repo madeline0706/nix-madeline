@@ -9,6 +9,7 @@
         tree
 	git
 	speedtest-rs
+	android-tools
       ];
     };
     programs.bash.promptInit = ''
