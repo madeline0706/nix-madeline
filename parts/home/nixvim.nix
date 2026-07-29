@@ -34,7 +34,7 @@
         ignorecase = true;     # Searches are case-insensitive...
         smartcase = true;      # ...unless you type a capital letter.
 
-        termguicolors = true;  # Enable full colors in the terminal.
+        termguicolors = false; # Use the terminal's 16 ANSI colors (matches the foot theme).
         clipboard = "unnamedplus"; # Share yank/paste with the system clipboard.
 
         undofile = true;       # Persist undo history across sessions.
