@@ -11,6 +11,10 @@
       url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
   };
