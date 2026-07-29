@@ -12,13 +12,6 @@
       viAlias = true;
       vimAlias = true;
 
-      # Colorscheme. `catppuccin` is a soft dark theme; swap for another
-      # `colorschemes.<name>.enable` if you like (e.g. tokyonight, gruvbox).
-      colorschemes.catppuccin = {
-        enable = true;
-        settings.flavour = "mocha";
-      };
-
       # The leader key is a prefix for custom shortcuts. Space is the common
       # modern default and is easy to reach. Used below as "<leader>".
       globals.mapleader = " ";
