@@ -36,9 +36,8 @@
     };
 
     home.packages = with pkgs; [
-      terminus_font
-      aseprite
-      playerctl
+      terminus_font # Main font
+      playerctl 
       libnotify
       arrpc
       lf
@@ -56,6 +55,7 @@
       ncdu
       pulsemixer
       mprisence
+      thunderbird
     ];
 
     xdg.desktopEntries = {
