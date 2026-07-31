@@ -55,8 +55,6 @@
       ncdu
       pulsemixer
       mprisence
-      # Email
-      protonmail-bridge
       thunderbird
     ];
 
