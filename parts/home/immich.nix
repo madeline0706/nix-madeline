@@ -55,8 +55,7 @@
     systemd.user.timers.immich-sync = {
       Unit.Description = "Hourly Immich sync of Screenshots and wallpapers";
       Timer = {
-        OnBootSec = "5m";
-        OnUnitActiveSec = "1h";
+        OnCalendar = "hourly";
         Persistent = true;
       };
       Install.WantedBy = [ "timers.target" ];
