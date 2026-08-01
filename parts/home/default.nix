@@ -55,7 +55,6 @@
       ncdu
       pulsemixer
       mprisence
-      thunderbird
     ];
 
     xdg.desktopEntries = {
