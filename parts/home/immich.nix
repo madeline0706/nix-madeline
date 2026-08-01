@@ -36,8 +36,9 @@
         "$immich" upload --recursive --album-name "$album" "$dir"
       }
 
-      sync_dir "$HOME/Screenshots" "Screenshots"
-      sync_dir "$HOME/wallpapers"  "Wallpapers"
+      sync_dir "$HOME/Screenshots"           "Screenshots"
+      sync_dir "$HOME/wallpapers"            "Wallpapers"
+      sync_dir "$HOME/.minecraft/screenshots" "Minecraft"
     '';
   in
   {
