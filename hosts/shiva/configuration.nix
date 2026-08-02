@@ -12,7 +12,7 @@
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ]; #to build pi 5 image
   nix.settings.trusted-users = [ "madeline" ];
   nix.settings.extra-platforms = [ "aarch64-linux" ];
-  networking.hostName = "arcanine-nix";
+  networking.hostName = "shiva";
   nix.settings.extra-substituters = [ "https://nixos-raspberrypi.cachix.org" ];
   nix.settings.extra-trusted-public-keys = [ "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI=" ];
   hardware.cpu.amd.updateMicrocode = true;

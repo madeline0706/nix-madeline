@@ -14,7 +14,7 @@
 
   config = {
     hosts = {
-      arcanine-nix.system = "x86_64-linux";
+      shiva.system = "x86_64-linux";
       bulbasaur-nix.system = "x86_64-linux";
     };
 
