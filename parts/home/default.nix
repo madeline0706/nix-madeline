@@ -87,13 +87,16 @@
         "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
         "logo": {
           "source": "nixos",
+          # Use ANSI palette indices (not truecolor) so the logo follows
+          # whatever theme is active — the `theme` command recolors 0-15 via OSC.
+          # Rainbow sweep around the 6 snowflake arms: red, yellow, green, cyan, blue, magenta.
           "color": {
-            "1": "38;2;255;0;0",
-            "2": "38;2;255;140;0",
-            "3": "38;2;255;225;0",
-            "4": "38;2;0;200;60",
-            "5": "38;2;0;130;255",
-            "6": "38;2;160;60;255"
+            "1": "31",
+            "2": "33",
+            "3": "32",
+            "4": "36",
+            "5": "34",
+            "6": "35"
           }
         },
         "modules": [
