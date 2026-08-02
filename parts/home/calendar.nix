@@ -16,7 +16,7 @@
         remote = {
           type = "caldav";
           url = "https://dav.mailbox.org/";
-          userName = "madeline@spellbound.sh";
+          userName = "jerma985@mailbox.org";
           # App password lives outside the nix store (chmod 600). See CLAUDE.md
           # post-install steps. vdirsyncer reads it via this command.
           passwordCommand = [ "cat" "/home/madeline/.config/vdirsyncer/mailbox-password" ];
