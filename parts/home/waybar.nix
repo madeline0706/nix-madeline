@@ -14,12 +14,12 @@
           background-color: rgba(10, 10, 10, 0.75);
           color: #c8c4b0;
         }
-        #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris, #custom-launcher, #custom-tailscale {
+        #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris, #custom-launcher, #custom-tailscale, #custom-help {
           padding: 0 10px;
           color: #c8c4b0;
           background-color: transparent;
         }
-        #custom-launcher:hover, #custom-tailscale:hover {
+        #custom-launcher:hover, #custom-tailscale:hover, #custom-help:hover {
           color: #ffea00;
         }
         #workspaces button {
@@ -42,7 +42,7 @@
           layer = "top";
           position = "top";
           height = 24;
-          modules-left = [ "custom/launcher" "sway/workspaces" "mpris" ];
+          modules-left = [ "custom/launcher" "custom/help" "sway/workspaces" "mpris" ];
           modules-center = [ "clock" ];
           modules-right = [ "custom/sysinfo" "pulseaudio" "network" "custom/tailscale" "battery" ];
           clock = {
@@ -88,6 +88,11 @@
             format = "TS";
             tooltip = false;
             on-click = "${pkgs.writeShellScript "tailscale-menu" (builtins.readFile ../../scripts/tailscale-menu.sh)}";
+          };
+          "custom/help" = {
+            format = "?";
+            tooltip = false;
+            on-click = "${pkgs.writeShellScript "sway-keybinds" (builtins.readFile ../../scripts/sway-keybinds.sh)}";
           };
         };
       };
