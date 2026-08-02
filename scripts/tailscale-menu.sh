@@ -34,8 +34,9 @@ exit_menu() {
 
 devices_menu() {
   local sel ip
-  sel="$(jq -r '.Peer[]? | select((.TailscaleIPs|length)>0) |
-    "\(.HostName) — \(.TailscaleIPs[0]) [\(if .Online then "on" else "off" end)]"' \
+  sel="$(jq -r '.Peer[]? | select((.TailscaleIPs|length)>0)
+    | select(((.DNSName // "") | test("mullvad")) or ((.HostName // "") | test("(^|[-.])wg[-0-9]")) | not)
+    | "\(.HostName) — \(.TailscaleIPs[0]) [\(if .Online then "on" else "off" end)]"' \
     <<<"$status_json" | sort | menu "Devices (copy IP)")" || return 0
   [ -z "$sel" ] && return 0
   ip="$(grep -oE '100\.[0-9]+\.[0-9]+\.[0-9]+|fd7a:[0-9a-f:]+' <<<"$sel" | head -1 || true)"

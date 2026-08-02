@@ -82,6 +82,23 @@
       NoDisplay=true
     '';
 
+    xdg.configFile."fastfetch/config.jsonc".text = ''
+      {
+        "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+        "logo": {
+          "source": "nixos",
+          "color": {
+            "1": "38;2;255;0;0",
+            "2": "38;2;255;140;0",
+            "3": "38;2;255;225;0",
+            "4": "38;2;0;200;60",
+            "5": "38;2;0;130;255",
+            "6": "38;2;160;60;255"
+          }
+        }
+      }
+    '';
+
     xdg.configFile."mprisence/config.toml".text = ''
       [web_player.feishin]
       match_pattern = "feishin.spellbound.sh"

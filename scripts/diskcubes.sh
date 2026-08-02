@@ -161,9 +161,10 @@ function addbox(bx,by,bw,bh,   bx2,by2,c,r) {
 }
 
 # --------------------------------------- squarified treemap layout engine ---
-function worst(rmax,rmin,s,side) {
-  return ( (side*side*rmax)/(s*s) > (s*s)/(side*side*rmin) )
-         ? (side*side*rmax)/(s*s) : (s*s)/(side*side*rmin)
+function worst(rmax,rmin,s,side,   hi,lo) {
+  hi = (side*side*rmax)/(s*s)
+  lo = (s*s)/(side*side*rmin)
+  return (hi>lo) ? hi : lo
 }
 function layout(m,   fx,fy,fw,fh,i,k,side,horiz,rowsum,rmax,rmin,cnt,a,ns,nmax,nmin,
                      remLong,isLast,thick,pos,acc,t,frac,end,len) {
