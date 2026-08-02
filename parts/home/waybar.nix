@@ -1,5 +1,9 @@
 { ... }: {
-  flake.homeModules.waybar = { config, pkgs, ... }: {
+  flake.homeModules.waybar = { config, pkgs, ... }:
+  let
+    sysinfo = pkgs.writeShellScript "sysinfo" (builtins.readFile ../../scripts/sysinf.sh);
+    netDblClick = pkgs.writeShellScript "net-dblclick" (builtins.readFile ../../scripts/net-dblclick.sh);
+  in {
     programs.waybar = {
       enable = true;
       style = ''
@@ -14,8 +18,13 @@
           background-color: rgba(10, 10, 10, 0.75);
           color: #c8c4b0;
         }
-        #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris, #custom-launcher, #custom-tailscale, #custom-help {
+        #clock, #pulseaudio, #network, #workspaces, #battery, #mpris, #custom-launcher, #custom-tailscale, #custom-help {
           padding: 0 10px;
+          color: #c8c4b0;
+          background-color: transparent;
+        }
+        #custom-cpu, #custom-ram, #custom-disk, #custom-net {
+          padding: 0 6px;
           color: #c8c4b0;
           background-color: transparent;
         }
@@ -44,7 +53,7 @@
           height = 24;
           modules-left = [ "custom/launcher" "custom/help" "sway/workspaces" "mpris" ];
           modules-center = [ "clock" ];
-          modules-right = [ "custom/sysinfo" "pulseaudio" "network" "custom/tailscale" "battery" ];
+          modules-right = [ "custom/cpu" "custom/ram" "custom/disk" "custom/net" "pulseaudio" "network" "custom/tailscale" "battery" ];
           clock = {
             format = "{:%Y-%m-%d %I:%M %p}";
             tooltip-format = "<tt>{calendar}</tt>";
@@ -53,12 +62,12 @@
             format-ethernet = "Et";
             format-wifi = "Wi {signalStrength}%";
             format-disconnected = "Di";
-            on-click = "foot -e nmtui";
+            on-click = "foot --app-id=floatterm -e nmtui";
           };
           pulseaudio = {
             format = "Vo {volume}%";
             format-muted = "Mu";
-            on-click = "foot -e pulsemixer";
+            on-click = "foot --app-id=floatterm -e pulsemixer";
           };
           battery = {
             format = "Ba {capacity}%";
@@ -74,11 +83,37 @@
             format = "> {artist} — {title}";
             format-paused = "= {artist} — {title}";
           };
-          "custom/sysinfo" = {
-            exec = "${pkgs.writeShellScript "sysinfo" (builtins.readFile ../../scripts/sysinf.sh)}";
+          "custom/cpu" = {
+            exec = "${sysinfo} cpu";
             interval = 1;
             return-type = "";
             format = "{}";
+            tooltip = false;
+            on-click = "foot --app-id=floatterm -e btop";
+          };
+          "custom/ram" = {
+            exec = "${sysinfo} ram";
+            interval = 1;
+            return-type = "";
+            format = "{}";
+            tooltip = false;
+            on-click = "foot --app-id=floatterm -e btop";
+          };
+          "custom/disk" = {
+            exec = "${sysinfo} disk";
+            interval = 5;
+            return-type = "";
+            format = "{}";
+            tooltip = false;
+            on-click = "foot --app-id=floatterm -e sh -c 'diskcubes 512; echo; read -n1 -rs -p \"Press any key to close…\"'";
+          };
+          "custom/net" = {
+            exec = "${sysinfo} net";
+            interval = 1;
+            return-type = "";
+            format = "{}";
+            tooltip = false;
+            on-click = "${netDblClick}";
           };
           "custom/launcher" = {
             format = "=";

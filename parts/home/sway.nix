@@ -130,6 +130,8 @@
         window.commands = [
           { criteria = { class = ".*"; }; command = "inhibit_idle fullscreen"; }
           { criteria = { app_id = ".*"; }; command = "inhibit_idle fullscreen"; }
+          # Popup terminals launched from waybar (app-id floatterm) float and center
+          { criteria = { app_id = "floatterm"; }; command = "floating enable, resize set 900 600, move position center"; }
         ];
       };
     };
