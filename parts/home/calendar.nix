@@ -12,7 +12,6 @@
     accounts.calendar = {
       basePath = ".local/share/calendars";
       accounts.mailbox = {
-        primary = true;
         remote = {
           type = "caldav";
           url = "https://dav.mailbox.org/";
