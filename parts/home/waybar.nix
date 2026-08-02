@@ -53,6 +53,7 @@
             format-ethernet = "Et";
             format-wifi = "Wi {signalStrength}%";
             format-disconnected = "Di";
+            on-click = "foot -e nmtui";
           };
           pulseaudio = {
             format = "Vo {volume}%";

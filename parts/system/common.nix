@@ -4,7 +4,7 @@
     time.timeZone = "America/Los_Angeles";
     users.users.madeline = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "video" ];
+      extraGroups = [ "wheel" "video" "networkmanager" ];
       packages = with pkgs; [
         tree
 	git
