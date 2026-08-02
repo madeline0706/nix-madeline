@@ -64,7 +64,7 @@
             on-click = "foot --app-id=floatterm -e tty-clock -c -s";
           };
           network = {
-            format-ethernet = "Et";
+            format-ethernet = "ETH";
             format-wifi = "WIFI {signalStrength}%";
             format-disconnected = "NULL";
             on-click = "foot --app-id=floatterm -e nmtui";
@@ -126,7 +126,7 @@
             on-click = "j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' --tb '#000000ff' --tf '#a7c080ff' --ff '#c8c4b0ff' --hf '#dbbc7fff' -H 20 -B 1 --bdr '#a7c080ff'\"";
           };
           "custom/tailscale" = {
-            format = "TS";
+            format = "::";
             tooltip = false;
             on-click = "${pkgs.writeShellScript "tailscale-menu" (builtins.readFile ../../scripts/tailscale-menu.sh)}";
           };
