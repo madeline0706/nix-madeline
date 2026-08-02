@@ -11,4 +11,4 @@ grep -E '^[[:space:]]*bindsym' "$cfg" \
   | sort \
   | bemenu -l 25 -p "keybinds" --fn 'Terminus 12' -c --width-factor 0.6 \
       --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' \
-      --hf '#ffea00ff' -B 1 --bdr '#8b3a5aff' >/dev/null
+      --hf '#ffea00ff' -B 1 --bdr '#00e600ff' >/dev/null

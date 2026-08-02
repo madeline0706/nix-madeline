@@ -40,11 +40,11 @@
         };
 
         colors.focused = {
-          border = "#8b3a5a";
-          background = "#8b3a5a";
+          border = "#00e600";
+          background = "#00e600";
           text = "#ffffff";
-          indicator = "#8b3a5a";
-          childBorder = "#8b3a5a";
+          indicator = "#00e600";
+          childBorder = "#00e600";
         };
 
         bars = [
@@ -59,7 +59,7 @@
 
         keybindings = let mod = "Mod4"; in {
           # App launcher
-          "${mod}+m" = "exec j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' --hf '#ffea00ff' -B 1 --bdr '#8b3a5aff'\"";
+          "${mod}+m" = "exec j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' --hf '#ffea00ff' -B 1 --bdr '#00e600ff'\"";
           # Terminal
           "${mod}+t" = "exec foot";
           # Firefox
