@@ -25,7 +25,12 @@
           type = "filesystem";
           fileExt = ".ics";
         };
-        vdirsyncer.enable = true;
+        vdirsyncer = {
+          enable = true;
+          # Discover and pair every calendar present on both sides (Calendar,
+          # Birthdays, Tasks) instead of treating the account as one collection.
+          collections = [ "from a" "from b" ];
+        };
         khal = {
           enable = true;
           type = "discover";
