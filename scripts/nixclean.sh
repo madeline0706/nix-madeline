@@ -71,11 +71,11 @@ done
 
 # --- Privilege check ---------------------------------------------------------
 
-if [ "$(id -u)" -ne 0 ]; then
+# A dry run only prints; it never needs root. Everything else does.
+if [ "$DRY_RUN" = no ] && [ "$(id -u)" -ne 0 ]; then
   log "Re-executing under sudo…"
   args=(--age "$AGE")
   [ "$OPTIMISE" = no ] && args+=(--no-optimise)
-  [ "$DRY_RUN" = yes ] && args+=(--dry-run)
   exec sudo "$0" "${args[@]}"
 fi
 
