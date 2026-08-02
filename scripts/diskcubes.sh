@@ -241,9 +241,19 @@ END {
   K = (n<TOP)?n:TOP
   sumTop=0
   for (t=1;t<=K;t++) { S[t]=SIZE[R[t]]; P[t]=PATHS[R[t]]; TC[t]=CAT[R[t]]; sumTop+=S[t] }
-  for (t=1;t<=K;t++) A[t] = S[t]/sumTop * (W*H)
 
-  laid = layout(K)
+  # Lay out, and if any box came out degenerate (too thin/short to draw a
+  # readable cube — i.e. < 3x3), drop the smallest and relayout. This absorbs
+  # the size skew that would otherwise leave 1-wide slivers. Dropped files
+  # still appear in the ranked list below.
+  while (1) {
+    for (t=1;t<=K;t++) A[t] = S[t]/sumTop * (W*H)
+    laid = layout(K)
+    bad = (laid < K)
+    for (t=1; t<=laid && !bad; t++) if (TW[t]<3 || TH[t]<3) bad=1
+    if (!bad || K<=1) break
+    sumTop -= S[K]; K--
+  }
 
   # fill interiors + labels (borders were recorded as segments during layout)
   for (t=1; t<=laid; t++) {

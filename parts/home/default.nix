@@ -95,7 +95,29 @@
             "5": "38;2;0;130;255",
             "6": "38;2;160;60;255"
           }
-        }
+        },
+        "modules": [
+          "title",
+          "separator",
+          "os",
+          "host",
+          "kernel",
+          "uptime",
+          "packages",
+          "shell",
+          "display",
+          "wm",
+          "terminal",
+          "cpu",
+          "gpu",
+          "memory",
+          "swap",
+          "disk",
+          "localip",
+          "locale",
+          "break",
+          "colors"
+        ]
       }
     '';
 
