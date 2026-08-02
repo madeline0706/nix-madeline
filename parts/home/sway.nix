@@ -59,7 +59,7 @@
 
         keybindings = let mod = "Mod4"; in {
           # App launcher
-          "${mod}+m" = "exec j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'\"";
+          "${mod}+m" = "exec j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff'\"";
           # Terminal
           "${mod}+t" = "exec foot";
           # Firefox

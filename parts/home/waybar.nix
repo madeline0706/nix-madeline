@@ -82,7 +82,7 @@
           "custom/launcher" = {
             format = "=";
             tooltip = false;
-            on-click = "j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'\"";
+            on-click = "j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff'\"";
           };
           "custom/tailscale" = {
             format = "TS";
