@@ -5,7 +5,7 @@ set -uo pipefail
 menu() {
   bemenu -l 15 -p "$1" --fn 'Terminus 12' -c --width-factor 0.3 \
     --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' --tb '#000000ff' --tf '#a7c080ff' --ff '#c8c4b0ff' \
-    --hf '#dbbc7fff' -H 24 -B 1 --bdr '#a7c080ff'
+    --hf '#dbbc7fff' -H 20 -B 1 --bdr '#a7c080ff'
 }
 
 notify() { notify-send -t 3000 "Tailscale" "$1" 2>/dev/null || true; }
