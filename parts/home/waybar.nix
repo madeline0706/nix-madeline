@@ -65,20 +65,20 @@
           };
           network = {
             format-ethernet = "Et";
-            format-wifi = "Wi {signalStrength}%";
-            format-disconnected = "Di";
+            format-wifi = "WIFI {signalStrength}%";
+            format-disconnected = "NULL";
             on-click = "foot --app-id=floatterm -e nmtui";
           };
           pulseaudio = {
-            format = "Vo {volume}%";
-            format-muted = "Mu";
+            format = "VOL {volume}%";
+            format-muted = "MUTED";
             on-click = "foot --app-id=floatterm -e pulsemixer";
           };
           battery = {
-            format = "Ba {capacity}%";
-            format-charging = "Ch {capacity}%";
-            format-warning = "Wa {capacity}%";
-            format-critical = "Cr {capacity}%";
+            format = "BAT {capacity}%";
+            format-charging = "CHAR {capacity}%";
+            format-warning = "WARN {capacity}%";
+            format-critical = "CRIT {capacity}%";
             states = {
               warning = 30;
               critical = 15;
