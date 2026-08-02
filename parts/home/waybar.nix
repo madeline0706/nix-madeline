@@ -14,12 +14,12 @@
           background-color: rgba(10, 10, 10, 0.75);
           color: #c8c4b0;
         }
-        #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris, #custom-launcher {
+        #clock, #pulseaudio, #network, #workspaces, #custom-sysinfo, #battery, #mpris, #custom-launcher, #custom-tailscale {
           padding: 0 10px;
           color: #c8c4b0;
           background-color: transparent;
         }
-        #custom-launcher:hover {
+        #custom-launcher:hover, #custom-tailscale:hover {
           color: #ffea00;
         }
         #workspaces button {
@@ -44,7 +44,7 @@
           height = 24;
           modules-left = [ "custom/launcher" "sway/workspaces" "mpris" ];
           modules-center = [ "clock" ];
-          modules-right = [ "custom/sysinfo" "pulseaudio" "network" "battery" ];
+          modules-right = [ "custom/sysinfo" "pulseaudio" "network" "custom/tailscale" "battery" ];
           clock = {
             format = "{:%Y-%m-%d %I:%M %p}";
             tooltip-format = "<tt>{calendar}</tt>";
@@ -83,6 +83,11 @@
             format = "=";
             tooltip = false;
             on-click = "j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff'\"";
+          };
+          "custom/tailscale" = {
+            format = "TS";
+            tooltip = false;
+            on-click = "${pkgs.writeShellScript "tailscale-menu" (builtins.readFile ../../scripts/tailscale-menu.sh)}";
           };
         };
       };
