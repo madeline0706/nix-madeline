@@ -49,9 +49,10 @@ usage() {
   exit "${1:-0}"
 }
 
-# Bytes free on the store's filesystem, for before/after reporting.
+# KiB free on the store's filesystem, for best-effort before/after reporting.
+# Never fails the script: on any error it just yields an empty string.
 store_free() {
-  df -P --output=avail /nix/store 2>/dev/null | tail -n1 | tr -d ' '
+  df --output=avail /nix/store 2>/dev/null | tail -n1 | tr -d ' ' || true
 }
 
 human() { numfmt --to=iec --suffix=B "${1:-0}" 2>/dev/null || echo "${1:-0}"; }
