@@ -22,7 +22,8 @@
 
 set -euo pipefail
 
-export PATH="/run/current-system/sw/bin:/run/wrappers/bin:/usr/bin:/bin:$PATH"
+# /run/wrappers/bin must come first — that is where the setuid sudo lives.
+export PATH="/run/wrappers/bin:/run/current-system/sw/bin:/usr/bin:/bin:$PATH"
 
 AGE="${NIX_CLEAN_AGE:-7d}"
 OPTIMISE=yes
