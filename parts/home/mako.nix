@@ -30,8 +30,8 @@
 
         "urgency=critical" = {
           background-color = "#0d0d0d";
-          text-color = "#d4527a";
-          border-color = "#8b3a5a";
+          text-color = "#e67e80";
+          border-color = "#e67e80";
           default-timeout = 0;
         };
       };
