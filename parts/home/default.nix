@@ -52,6 +52,7 @@
       waybar
       fastfetch
       btop
+      tty-clock
       ncdu
       pulsemixer
       mprisence

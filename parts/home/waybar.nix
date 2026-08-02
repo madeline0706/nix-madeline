@@ -2,7 +2,6 @@
   flake.homeModules.waybar = { config, pkgs, ... }:
   let
     sysinfo = pkgs.writeShellScript "sysinfo" (builtins.readFile ../../scripts/sysinf.sh);
-    netDblClick = pkgs.writeShellScript "net-dblclick" (builtins.readFile ../../scripts/net-dblclick.sh);
   in {
     programs.waybar = {
       enable = true;
@@ -52,11 +51,17 @@
           position = "top";
           height = 24;
           modules-left = [ "custom/launcher" "custom/help" "sway/workspaces" "mpris" ];
-          modules-center = [ "clock" ];
+          modules-center = [ "clock#date" "clock#time" ];
           modules-right = [ "custom/cpu" "custom/ram" "custom/disk" "custom/net" "pulseaudio" "network" "custom/tailscale" "battery" ];
-          clock = {
-            format = "{:%Y-%m-%d %I:%M %p}";
-            tooltip-format = "<tt>{calendar}</tt>";
+          "clock#date" = {
+            format = "{:%Y-%m-%d}";
+            tooltip = false;
+            on-click = "foot --app-id=floatterm -e sh -c 'vdirsyncer sync; ikhal'";
+          };
+          "clock#time" = {
+            format = "{:%I:%M %p}";
+            tooltip = false;
+            on-click = "foot --app-id=floatterm -e tty-clock -c -s";
           };
           network = {
             format-ethernet = "Et";
@@ -113,7 +118,7 @@
             return-type = "";
             format = "{}";
             tooltip = false;
-            on-click = "${netDblClick}";
+            on-click = "foot --app-id=floatterm -e sh -c 'cfspeedtest; echo; read -n1 -rs -p \"Press any key to close…\"'";
           };
           "custom/launcher" = {
             format = "=";

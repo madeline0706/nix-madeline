@@ -8,7 +8,7 @@
       packages = with pkgs; [
         tree
 	git
-	speedtest-rs
+	cfspeedtest
 	android-tools
       ];
     };
