@@ -64,6 +64,8 @@ document.getElementById('hud').textContent =
 
 // View transform (pan + zoom). Origin starts at screen centre.
 let scale = 1, ox = canvas.width / 2, oy = canvas.height / 2;
+// Interaction state, declared before the loop starts (tick/draw read these).
+let dragging = null, hover = null, panning = false, px = 0, py = 0;
 const toScreen = n => ({ x: ox + n.x * scale, y: oy + n.y * scale });
 const radius = n => 4 + Math.sqrt(n.deg) * 2.5;
 
@@ -118,10 +120,8 @@ function draw() {
 }
 
 function frame() { tick(); draw(); requestAnimationFrame(frame); }
-frame();
 
 // Interaction: drag nodes, pan the background, wheel to zoom, hover to label.
-let dragging = null, hover = null, panning = false, px = 0, py = 0;
 function pick(mx, my) {
   for (let i = nodes.length - 1; i >= 0; i--) {
     const n = nodes[i], p = toScreen(n), r = radius(n) * scale + 4;
@@ -152,6 +152,9 @@ canvas.addEventListener('wheel', e => {
   oy = e.clientY - (e.clientY - oy) * f;
   scale *= f;
 }, { passive: false });
+
+// Everything is wired up; start the render/simulation loop.
+frame();
 </script>
 </body>
 </html>
