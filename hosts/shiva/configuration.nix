@@ -32,6 +32,15 @@
 
   services.power-profiles-daemon.enable = false;
 
+  # Let the waybar BAT widget switch TLP profiles without a password prompt.
+  security.sudo.extraRules = [{
+    users = [ "madeline" ];
+    commands = [{
+      command = "/run/current-system/sw/bin/tlp";
+      options = [ "NOPASSWD" ];
+    }];
+  }];
+
   services.logind.settings.Login = {
     HandleLidSwitch = "suspend";
     HandleLidSwitchExternalPower = "lock";

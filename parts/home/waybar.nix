@@ -83,6 +83,7 @@
               warning = 30;
               critical = 15;
             };
+            on-click = "${pkgs.writeShellScript "tlp-menu" (builtins.readFile ../../scripts/tlp-menu.sh)}";
           };
           mpris = {
             format = "> {artist} — {title}";
