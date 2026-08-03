@@ -64,6 +64,8 @@
       footclient = { name = "Foot Client"; noDisplay = true; };
       nixos-manual = { name = "NixOS Manual"; noDisplay = true; };
       lf = { name = "lf"; noDisplay = true; };
+      khal = { name = "ikhal"; noDisplay = true; };
+      nvim = { name = "Neovim wrapper"; noDisplay = true; };
     };
 
     home.file.".local/share/applications/btop.desktop".text = ''
@@ -73,6 +75,7 @@
       Icon=btop
       Exec=btop
       Terminal=true
+      NoDisplay=true
       Categories=System;Monitor;ConsoleOnly;
     '';
 
