@@ -4,17 +4,12 @@
   # learn vim: the comments explain what each piece does.
   flake.homeModules.nixvim = { pkgs, lib, ... }:
   let
-    # wiki.nvim isn't in nixpkgs, so build it straight from GitHub. It's a
-    # pure-Lua plugin, so this is just packaging the source tree as a runtimepath.
-    wiki-nvim = pkgs.vimUtils.buildVimPlugin {
-      pname = "wiki-nvim";
-      version = "0-unstable-2026-03-09";
-      src = pkgs.fetchFromGitHub {
-        owner = "dhayer200";
-        repo = "wiki.nvim";
-        rev = "5c50b260d407021cf5ba45a81e841723fd7cf46d";
-        hash = "sha256-+jGg1RJV2vXB6FwvRTNC68M5BJH+0qjmndrcNeh1IRo=";
-      };
+    # visual.nvim is our own from-scratch plugin (see ./visual-nvim). It's pure
+    # Lua, so packaging is just dropping the source tree onto the runtimepath.
+    visual-nvim = pkgs.vimUtils.buildVimPlugin {
+      pname = "visual-nvim";
+      version = "0.1";
+      src = ./visual-nvim;
     };
   in {
     imports = [ inputs.nixvim.homeModules.nixvim ];
@@ -93,21 +88,21 @@
         nvim-autopairs.enable = true;
       };
 
-      # A lightweight personal wiki: [[wikilinks]], backlinks, and a link panel
-      # over a directory of markdown notes. Not a nixvim module, so it's added
-      # as a raw plugin and configured with its Lua setup() below.
-      extraPlugins = [ wiki-nvim ];
+      # A lightweight personal wiki over a directory of markdown notes:
+      # [[wikilinks]] plus a self-hosted, Obsidian-style graph view in the
+      # browser (:Visual). Added as a raw plugin and configured with setup() below.
+      extraPlugins = [ visual-nvim ];
 
-      # wiki.nvim shells out to ripgrep for backlink search and node for the
-      # browser graph (:WikiGraph); make both available to Neovim.
-      extraPackages = [ pkgs.ripgrep pkgs.nodejs ];
+      # ripgrep powers telescope's live_grep. visual.nvim needs nothing extra:
+      # its web server is libuv (bundled with Neovim) and the graph is vanilla JS.
+      extraPackages = [ pkgs.ripgrep ];
 
-      # `root` is where notes live; `gf` follows a [[wikilink]] under the cursor
-      # and <C-x><C-u> completes link names in markdown/text buffers.
+      # `root` is where notes live; `gf` follows a [[wikilink]] under the cursor,
+      # and :Visual serves the note graph on a random port and opens the browser.
       extraConfigLua = ''
-        require("wiki").setup({
+        require("visual").setup({
           root = vim.fn.expand("~/notes"),
-          extensions = { "md", "typ", "txt", "rtf", "enex", "tex" },
+          extensions = { "md", "markdown", "txt" },
         })
       '';
 
@@ -124,6 +119,12 @@
           key = "<leader>w";
           action = "<cmd>w<CR>";
           options.desc = "Save file";
+        }
+        {
+          mode = "n";
+          key = "<leader>v";
+          action = "<cmd>Visual<CR>";
+          options.desc = "Open note graph in browser";
         }
         {
           mode = "n";
