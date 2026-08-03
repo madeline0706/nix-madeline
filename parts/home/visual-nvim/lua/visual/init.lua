@@ -28,28 +28,73 @@ local PAGE = [==[
 <title>visual.nvim</title>
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: #1e1e2e;
-    font-family: ui-sans-serif, system-ui, sans-serif; }
+    font-family: 'Newsreader', Georgia, serif; }
   canvas { display: block; }
   #hud { position: fixed; top: 12px; left: 14px; color: #7f849c;
-    font-size: 12px; letter-spacing: .02em; pointer-events: none; }
+    font-size: 13px; letter-spacing: .02em; pointer-events: none; }
+
+  /* Note panel: pinned to the right third; the graph reflows into what's left. */
+  #panel { position: fixed; top: 0; right: 0; width: 33.333vw; height: 100%;
+    box-sizing: border-box; background: #181825; border-left: 1px solid #313244;
+    color: #cdd6f4; display: none; flex-direction: column;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.35); }
+  #panel.open { display: flex; }
+  #panel header { display: flex; align-items: baseline; gap: 10px;
+    padding: 18px 22px 12px; border-bottom: 1px solid #313244; }
+  #panel h1 { margin: 0; flex: 1; font-size: 22px; font-weight: 600;
+    color: #cba6f7; overflow-wrap: anywhere; }
+  #panel .close { cursor: pointer; color: #7f849c; font-size: 22px;
+    line-height: 1; user-select: none; }
+  #panel .close:hover { color: #f38ba8; }
+  #panel .body { flex: 1; overflow-y: auto; padding: 14px 22px 28px;
+    font-size: 16px; line-height: 1.6; }
+  #panel .body h1, #panel .body h2, #panel .body h3 { color: #89b4fa;
+    margin: 1em 0 .4em; line-height: 1.25; }
+  #panel .body h1 { font-size: 20px; }
+  #panel .body h2 { font-size: 18px; }
+  #panel .body h3 { font-size: 16px; }
+  #panel .body p { margin: 0 0 .8em; }
+  #panel .body ul { margin: 0 0 .8em; padding-left: 1.3em; }
+  #panel .body code { background: #313244; padding: 1px 5px; border-radius: 4px;
+    font-family: ui-monospace, monospace; font-size: 14px; }
+  #panel .body pre { background: #11111b; padding: 12px 14px; border-radius: 6px;
+    overflow-x: auto; }
+  #panel .body pre code { background: none; padding: 0; }
+  #panel .body a.wl { color: #f9e2af; text-decoration: none; cursor: pointer; }
+  #panel .body a.wl:hover { text-decoration: underline; }
+  #panel .body .ghost { color: #7f849c; font-style: italic; }
 </style>
 </head>
 <body>
 <div id="hud"></div>
 <canvas id="c"></canvas>
+<aside id="panel">
+  <header><h1 id="panel-title"></h1><span class="close" id="panel-close">&times;</span></header>
+  <div class="body" id="panel-body"></div>
+</aside>
 <script>
 const DATA = /*__DATA__*/;
 
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+const panel = document.getElementById('panel');
+const panelTitle = document.getElementById('panel-title');
+const panelBody = document.getElementById('panel-body');
+// Width the open panel steals from the right; 0 when closed. The graph's usable
+// region is `canvas.width - panelW`, so opening the panel reflows it leftward.
+let panelW = 0;
+function resize() {
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  if (panel.classList.contains('open')) panelW = canvas.width / 3;
+}
 addEventListener('resize', resize); resize();
+const regionW = () => canvas.width - panelW;
 
 // Build the working graph from the injected data.
 const rawNodes = Array.isArray(DATA.nodes) ? DATA.nodes : [];
 const rawEdges = Array.isArray(DATA.edges) ? DATA.edges : [];
 const nodes = rawNodes.map(n => ({
-  id: n.id, exists: n.exists, deg: 0,
+  id: n.id, exists: n.exists, text: n.text, deg: 0,
   x: (Math.random() - 0.5) * 400, y: (Math.random() - 0.5) * 400, vx: 0, vy: 0,
 }));
 const index = {};
@@ -60,12 +105,15 @@ const links = rawEdges
 links.forEach(l => { l.s.deg++; l.t.deg++; });
 
 document.getElementById('hud').textContent =
-  nodes.length + ' notes · ' + links.length + ' links · f or double-click to fit';
+  nodes.length + ' notes · ' + links.length + ' links · click a note to open · f to fit';
 
 // View transform (pan + zoom). Origin starts at screen centre.
 let scale = 1, ox = canvas.width / 2, oy = canvas.height / 2;
 // Interaction state, declared before the loop starts (tick/draw read these).
 let dragging = null, hover = null, panning = false, px = 0, py = 0;
+// Click-vs-drag tracking: a press that releases on the same orb without moving
+// counts as a click and opens that note; anything with movement is a drag/pan.
+let downNode = null, downX = 0, downY = 0, moved = false;
 // While true, the view keeps every node framed. Any manual pan/zoom turns it
 // off; `f` or a double-click turns it back on to recover a lost graph.
 let autofit = true;
@@ -83,8 +131,8 @@ function fitView() {
   }
   const pad = 90;
   const w = Math.max(maxx - minx, 1), h = Math.max(maxy - miny, 1);
-  scale = Math.min((canvas.width - pad) / w, (canvas.height - pad) / h, 1.6);
-  ox = canvas.width / 2 - (minx + maxx) / 2 * scale;
+  scale = Math.min((regionW() - pad) / w, (canvas.height - pad) / h, 1.6);
+  ox = regionW() / 2 - (minx + maxx) / 2 * scale;
   oy = canvas.height / 2 - (miny + maxy) / 2 * scale;
 }
 
@@ -155,13 +203,20 @@ function pick(mx, my) {
 }
 canvas.addEventListener('mousedown', e => {
   const n = pick(e.clientX, e.clientY);
-  if (n) { dragging = n; } else { panning = true; autofit = false; px = e.clientX; py = e.clientY; }
+  downX = e.clientX; downY = e.clientY; moved = false;
+  if (n) { dragging = n; downNode = n; }
+  else { panning = true; autofit = false; px = e.clientX; py = e.clientY; }
 });
 canvas.addEventListener('dblclick', () => { autofit = true; });
-addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') autofit = true; });
+addEventListener('keydown', e => {
+  if (e.key === 'f' || e.key === 'F') autofit = true;
+  else if (e.key === 'Escape') closePanel();
+});
 addEventListener('mousemove', e => {
   hover = dragging || pick(e.clientX, e.clientY);
   canvas.style.cursor = hover ? 'pointer' : (panning ? 'grabbing' : 'default');
+  if ((dragging || panning) &&
+      (Math.abs(e.clientX - downX) > 4 || Math.abs(e.clientY - downY) > 4)) moved = true;
   if (dragging) {
     dragging.x = (e.clientX - ox) / scale;
     dragging.y = (e.clientY - oy) / scale;
@@ -170,7 +225,82 @@ addEventListener('mousemove', e => {
     ox += e.clientX - px; oy += e.clientY - py; px = e.clientX; py = e.clientY;
   }
 });
-addEventListener('mouseup', () => { dragging = null; panning = false; });
+addEventListener('mouseup', () => {
+  // A press released on an orb it never left is a click: open that note.
+  if (downNode && !moved) openNode(downNode);
+  dragging = null; panning = false; downNode = null;
+});
+
+// --- Note panel -----------------------------------------------------------
+// A deliberately small markdown renderer: headings, fenced code, bullet lists,
+// inline code/bold/italic, and [[wikilinks]] (clickable — they open the linked
+// note's panel). Not spec-complete, just enough to read a note comfortably.
+const escapeHtml = s => s.replace(/[&<>"]/g,
+  c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const inlineFmt = s => s
+  .replace(/`([^`]+)`/g, '<code>$1</code>')
+  .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+  .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+function inlineMd(s) {
+  let out = '', last = 0, re = /\[\[([^\]]+)\]\]/g, m;
+  while ((m = re.exec(s))) {
+    out += inlineFmt(escapeHtml(s.slice(last, m.index)));
+    const body = m[1];
+    const id = body.replace(/[|#].*$/, '').trim();
+    const alias = (body.includes('|') ? body.slice(body.indexOf('|') + 1) : body)
+      .replace(/#.*$/, '').trim();
+    out += '<a class="wl" data-id="' + escapeHtml(id) + '">' + escapeHtml(alias) + '</a>';
+    last = re.lastIndex;
+  }
+  return out + inlineFmt(escapeHtml(s.slice(last)));
+}
+function renderMd(text) {
+  const out = [];
+  let inCode = false, list = null;
+  const flush = () => { if (list !== null) { out.push('<ul>' + list + '</ul>'); list = null; } };
+  for (const raw of text.split(/\r?\n/)) {
+    if (/^```/.test(raw)) {
+      flush();
+      out.push(inCode ? '</code></pre>' : '<pre><code>');
+      inCode = !inCode;
+      continue;
+    }
+    if (inCode) { out.push(escapeHtml(raw) + '\n'); continue; }
+    const h = raw.match(/^(#{1,3})\s+(.*)$/);
+    if (h) { flush(); out.push('<h' + h[1].length + '>' + inlineMd(h[2]) + '</h' + h[1].length + '>'); continue; }
+    const li = raw.match(/^\s*[-*+]\s+(.*)$/);
+    if (li) { list = (list || '') + '<li>' + inlineMd(li[1]) + '</li>'; continue; }
+    if (raw.trim() === '') { flush(); continue; }
+    flush();
+    out.push('<p>' + inlineMd(raw) + '</p>');
+  }
+  flush();
+  if (inCode) out.push('</code></pre>');
+  return out.join('');
+}
+function openNode(n) {
+  panelTitle.textContent = n.id;
+  panelBody.innerHTML = (n.exists && typeof n.text === 'string')
+    ? renderMd(n.text)
+    : '<p class="ghost">This note doesn\'t exist yet.</p>';
+  panelBody.scrollTop = 0;
+  panel.classList.add('open');
+  panelW = canvas.width / 3;
+  autofit = true; // reflow the graph into the space that's left
+}
+function closePanel() {
+  if (!panel.classList.contains('open')) return;
+  panel.classList.remove('open');
+  panelW = 0;
+  autofit = true;
+}
+document.getElementById('panel-close').addEventListener('click', closePanel);
+panelBody.addEventListener('click', e => {
+  const a = e.target.closest('a.wl');
+  if (!a) return;
+  const n = index[a.dataset.id];
+  if (n) openNode(n);
+});
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
   autofit = false;
@@ -224,6 +354,9 @@ local function build_graph(root, exts)
     ensure(name, true)
     local ok, lines = pcall(vim.fn.readfile, file)
     if ok then
+      -- Keep the raw note text so the browser can show it in the side panel
+      -- when its orb is clicked (no round-trip back to Neovim needed).
+      nodes[name].text = table.concat(lines, "\n")
       for _, line in ipairs(lines) do
         for raw in line:gmatch("%[%[(.-)%]%]") do
           local target = link_name(raw)
@@ -245,6 +378,10 @@ end
 
 local function render_page(graph)
   local json = vim.json.encode(graph)
+  -- Notes are embedded verbatim in DATA, so a note containing `</script>` would
+  -- otherwise close the inline <script> early. Escaping `<` as its JSON unicode
+  -- form (which decodes back to `<` in the browser) makes that impossible.
+  json = json:gsub("<", "\\u003c")
   return (PAGE:gsub("/%*__DATA__%*/", function() return json end))
 end
 
