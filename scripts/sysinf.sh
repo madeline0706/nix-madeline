@@ -46,6 +46,15 @@ case "$metric" in
     printf "<span color='%s'>%s</span>\n" "$(color "$cpu_pct")" "${cpu_pct}%"
     ;;
 
+  temp)
+    tdir=""
+    for h in /sys/class/hwmon/hwmon*; do
+        [ "$(cat "$h/name" 2>/dev/null)" = "k10temp" ] && { tdir="$h"; break; }
+    done
+    tc=$(( $(cat "$tdir/temp1_input" 2>/dev/null || echo 0) / 1000 ))
+    printf "<span color='%s'>%s</span>\n" "$(color "$tc")" "${tc}°C"
+    ;;
+
   ram)
     read -r ram_total_kb ram_avail_kb < <(awk '/^MemTotal/{t=$2} /^MemAvailable/{a=$2} END{print t, a}' /proc/meminfo)
     ram_used_kb=$(( ram_total_kb - ram_avail_kb ))
