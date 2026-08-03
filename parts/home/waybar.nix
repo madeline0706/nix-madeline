@@ -52,7 +52,7 @@
           height = 24;
           modules-left = [ "custom/tailscale" "custom/launcher" "custom/help" "sway/workspaces" "mpris" ];
           modules-center = [ "clock#date" "clock#time" ];
-          modules-right = [ "custom/cpu" "custom/ram" "custom/disk" "custom/net" "pulseaudio" "network" "battery" ];
+          modules-right = [ "custom/net" "custom/cpu" "custom/ram" "custom/disk" "pulseaudio" "network" "battery" ];
           "clock#date" = {
             format = "{:%Y-%m-%d}";
             tooltip = false;
@@ -127,7 +127,7 @@
             on-click = "j4-dmenu-desktop --no-generic --dmenu=\"bemenu -l 10 -p run: --fn 'Terminus 12' -c --width-factor 0.3 --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' --tb '#000000ff' --tf '#a7c080ff' --ff '#c8c4b0ff' --hf '#dbbc7fff' -H 20 -B 1 --bdr '#a7c080ff'\"";
           };
           "custom/tailscale" = {
-            format = "⣿";
+            format = "⠿";
             tooltip = false;
             on-click = "${pkgs.writeShellScript "tailscale-menu" (builtins.readFile ../../scripts/tailscale-menu.sh)}";
           };
