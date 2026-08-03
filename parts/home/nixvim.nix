@@ -23,6 +23,11 @@
     programs.nixvim = {
       enable = true;
 
+      # We drive nixvim with our own nixpkgs (pinned via the flake `follows`),
+      # so pin the module's nixpkgs source explicitly to match. Silences the
+      # "nixpkgs.source default affected by follows" evaluation warning.
+      nixpkgs.source = inputs.nixpkgs;
+
       # Make `vi`/`vim` open Neovim too, so muscle memory works.
       viAlias = true;
       vimAlias = true;
