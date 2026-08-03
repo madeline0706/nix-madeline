@@ -28,10 +28,10 @@ local PAGE = [==[
 <title>visual.nvim</title>
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: #1e1e2e;
-    font-family: 'Newsreader', Georgia, serif; }
+    font-family: 'Terminus', monospace; }
   canvas { display: block; }
   #hud { position: fixed; top: 12px; left: 14px; color: #7f849c;
-    font-size: 13px; letter-spacing: .02em; pointer-events: none; }
+    font-size: 16px; letter-spacing: .02em; pointer-events: none; }
 
   /* Note panel: pinned to the right third; the graph reflows into what's left. */
   #panel { position: fixed; top: 0; right: 0; width: 33.333vw; height: 100%;
@@ -41,22 +41,19 @@ local PAGE = [==[
   #panel.open { display: flex; }
   #panel header { display: flex; align-items: baseline; gap: 10px;
     padding: 18px 22px 12px; border-bottom: 1px solid #313244; }
-  #panel h1 { margin: 0; flex: 1; font-size: 22px; font-weight: 600;
+  #panel h1 { margin: 0; flex: 1; font-size: 16px; font-weight: 600;
     color: #cba6f7; overflow-wrap: anywhere; }
-  #panel .close { cursor: pointer; color: #7f849c; font-size: 22px;
+  #panel .close { cursor: pointer; color: #7f849c; font-size: 16px;
     line-height: 1; user-select: none; }
   #panel .close:hover { color: #f38ba8; }
   #panel .body { flex: 1; overflow-y: auto; padding: 14px 22px 28px;
     font-size: 16px; line-height: 1.6; }
   #panel .body h1, #panel .body h2, #panel .body h3 { color: #89b4fa;
-    margin: 1em 0 .4em; line-height: 1.25; }
-  #panel .body h1 { font-size: 20px; }
-  #panel .body h2 { font-size: 18px; }
-  #panel .body h3 { font-size: 16px; }
+    margin: 1em 0 .4em; line-height: 1.25; font-size: 16px; }
   #panel .body p { margin: 0 0 .8em; }
   #panel .body ul { margin: 0 0 .8em; padding-left: 1.3em; }
   #panel .body code { background: #313244; padding: 1px 5px; border-radius: 4px;
-    font-family: ui-monospace, monospace; font-size: 14px; }
+    font-family: 'Terminus', monospace; font-size: 16px; }
   #panel .body pre { background: #11111b; padding: 12px 14px; border-radius: 6px;
     overflow-x: auto; }
   #panel .body pre code { background: none; padding: 0; }
@@ -179,7 +176,7 @@ function draw() {
     ctx.fill();
     if (scale > 0.55 || n === hover) {
       ctx.fillStyle = n === hover ? '#f9e2af' : '#bac2de';
-      ctx.font = '12px ui-sans-serif, system-ui, sans-serif';
+      ctx.font = '16px Terminus, monospace';
       ctx.textAlign = 'center';
       ctx.fillText(n.id, p.x, p.y - r - 5);
     }

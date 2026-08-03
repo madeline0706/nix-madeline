@@ -14,11 +14,11 @@
   in {
     imports = [ inputs.nixvim.homeModules.nixvim ];
 
-    # visual.nvim's browser graph/note panel is styled in 'Newsreader'. Ship just
-    # that family (google-fonts' `fonts` arg avoids the ~2GB full bundle) and let
-    # fontconfig expose it, so the page stays self-contained — no Google Fonts CDN.
+    # visual.nvim's browser graph/note panel is styled in Terminus — the same
+    # font used everywhere else (installed via base's `terminus_font`), so nothing
+    # new is pulled in. fontconfig just needs to expose the HM-profile fonts to
+    # the browser.
     fonts.fontconfig.enable = true;
-    home.packages = [ (pkgs.google-fonts.override { fonts = [ "Newsreader" ]; }) ];
 
     programs.nixvim = {
       enable = true;
