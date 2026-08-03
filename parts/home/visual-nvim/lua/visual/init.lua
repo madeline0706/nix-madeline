@@ -450,7 +450,9 @@ function M.open()
 end
 
 -- `gf` in a note buffer: if the cursor sits inside a [[link]], open that note
--- (creating the path if it doesn't exist yet); otherwise fall back to builtin gf.
+-- (creating the path if it doesn't exist yet); if it sits inside a
+-- [text](url) markdown link to an external URL, open that in the browser;
+-- otherwise fall back to builtin gf.
 function M.follow()
   local line = vim.api.nvim_get_current_line()
   local col = vim.fn.col(".")
@@ -466,6 +468,19 @@ function M.follow()
         vim.cmd.edit(vim.fn.fnameescape(target))
         return
       end
+    end
+    from = e + 1
+  end
+  -- Markdown links `[text](url)`. The `[^]]` in the label keeps this from
+  -- swallowing a preceding `[[wikilink]]`, and only external URLs (with a
+  -- scheme like https:// or mailto:) are handed off to the OS opener.
+  from = 1
+  while true do
+    local s, e, url = line:find("%[[^%]]-%]%((.-)%)", from)
+    if not s then break end
+    if col >= s and col <= e and url:match("^%w[%w+.-]*:") then
+      vim.ui.open(url)
+      return
     end
     from = e + 1
   end
