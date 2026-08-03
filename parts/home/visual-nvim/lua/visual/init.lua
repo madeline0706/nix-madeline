@@ -60,14 +60,33 @@ const links = rawEdges
 links.forEach(l => { l.s.deg++; l.t.deg++; });
 
 document.getElementById('hud').textContent =
-  nodes.length + ' notes · ' + links.length + ' links';
+  nodes.length + ' notes · ' + links.length + ' links · f or double-click to fit';
 
 // View transform (pan + zoom). Origin starts at screen centre.
 let scale = 1, ox = canvas.width / 2, oy = canvas.height / 2;
 // Interaction state, declared before the loop starts (tick/draw read these).
 let dragging = null, hover = null, panning = false, px = 0, py = 0;
+// While true, the view keeps every node framed. Any manual pan/zoom turns it
+// off; `f` or a double-click turns it back on to recover a lost graph.
+let autofit = true;
 const toScreen = n => ({ x: ox + n.x * scale, y: oy + n.y * scale });
 const radius = n => 4 + Math.sqrt(n.deg) * 2.5;
+
+// Fit the whole graph into the viewport with a margin (capped zoom so a tiny
+// graph isn't blown up absurdly).
+function fitView() {
+  if (!nodes.length) return;
+  let minx = Infinity, miny = Infinity, maxx = -Infinity, maxy = -Infinity;
+  for (const n of nodes) {
+    if (n.x < minx) minx = n.x; if (n.x > maxx) maxx = n.x;
+    if (n.y < miny) miny = n.y; if (n.y > maxy) maxy = n.y;
+  }
+  const pad = 90;
+  const w = Math.max(maxx - minx, 1), h = Math.max(maxy - miny, 1);
+  scale = Math.min((canvas.width - pad) / w, (canvas.height - pad) / h, 1.6);
+  ox = canvas.width / 2 - (minx + maxx) / 2 * scale;
+  oy = canvas.height / 2 - (miny + maxy) / 2 * scale;
+}
 
 // One step of a small force simulation: node-node repulsion, edge springs,
 // and a gentle pull toward the origin so disconnected notes don't drift away.
@@ -119,7 +138,12 @@ function draw() {
   }
 }
 
-function frame() { tick(); draw(); requestAnimationFrame(frame); }
+function frame() {
+  tick();
+  if (autofit) fitView();
+  draw();
+  requestAnimationFrame(frame);
+}
 
 // Interaction: drag nodes, pan the background, wheel to zoom, hover to label.
 function pick(mx, my) {
@@ -131,8 +155,10 @@ function pick(mx, my) {
 }
 canvas.addEventListener('mousedown', e => {
   const n = pick(e.clientX, e.clientY);
-  if (n) { dragging = n; } else { panning = true; px = e.clientX; py = e.clientY; }
+  if (n) { dragging = n; } else { panning = true; autofit = false; px = e.clientX; py = e.clientY; }
 });
+canvas.addEventListener('dblclick', () => { autofit = true; });
+addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') autofit = true; });
 addEventListener('mousemove', e => {
   hover = dragging || pick(e.clientX, e.clientY);
   canvas.style.cursor = hover ? 'pointer' : (panning ? 'grabbing' : 'default');
@@ -147,6 +173,7 @@ addEventListener('mousemove', e => {
 addEventListener('mouseup', () => { dragging = null; panning = false; });
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
+  autofit = false;
   const f = e.deltaY < 0 ? 1.1 : 0.9;
   ox = e.clientX - (e.clientX - ox) * f;
   oy = e.clientY - (e.clientY - oy) * f;
