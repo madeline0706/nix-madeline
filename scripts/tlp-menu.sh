@@ -10,12 +10,13 @@ menu() {
 
 notify() { notify-send -t 3000 "TLP" "$1" 2>/dev/null || true; }
 
-# Current mode reported by the ACPI platform profile (readable without root).
-current="$(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo '?')"
-case "$current" in
-  quiet|low-power|power-saver) cur="power-saver" ;;
-  balanced|balanced-performance) cur="balanced" ;;
-  performance) cur="performance" ;;
+# Active mode from TLP's state file (field 1: 0=perf, 1=balanced, 2=power-saver).
+# More reliable than /sys/.../platform_profile, whose power-saver mapping
+# (low-power) is unsupported on some hardware and silently no-ops.
+case "$(awk '{print $1}' /run/tlp/last_pwr 2>/dev/null)" in
+  0) cur="performance" ;;
+  1) cur="balanced" ;;
+  2) cur="power-saver" ;;
   *) cur="" ;;
 esac
 
