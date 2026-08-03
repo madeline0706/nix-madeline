@@ -230,12 +230,15 @@ addEventListener('mouseup', () => {
 
 // --- Note panel -----------------------------------------------------------
 // A deliberately small markdown renderer: headings, fenced code, bullet lists,
-// inline code/bold/italic, and [[wikilinks]] (clickable — they open the linked
-// note's panel). Not spec-complete, just enough to read a note comfortably.
+// inline code/bold/italic, [[wikilinks]] (clickable — they open the linked
+// note's panel), and [text](url) links (collapsed to a clickable anchor that
+// opens in a new tab). Not spec-complete, just enough to read a note comfortably.
 const escapeHtml = s => s.replace(/[&<>"]/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const inlineFmt = s => s
   .replace(/`([^`]+)`/g, '<code>$1</code>')
+  .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener">$1</a>')
   .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 function inlineMd(s) {
