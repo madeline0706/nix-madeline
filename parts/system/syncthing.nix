@@ -5,8 +5,8 @@
     # Actions -> Show ID, or via `syncthing --device-id` on that host.
     # Fill these in once after the first rebuild (see notes below).
     allDevices = {
-      shiva        = "AAAAAAA-AAAAAAA-AAAAAAA-AAAAAAA-AAAAAAA-AAAAAAA-AAAAAAA-AAAAAAA";
-      bulbasaur-nix = "BBBBBBB-BBBBBBB-BBBBBBB-BBBBBBB-BBBBBBB-BBBBBBB-BBBBBBB-BBBBBBB";
+      shiva        = "A6W4X4N-JA6WJPR-GXO3CXO-BCDX5SZ-5VJA6ZM-6ADL6SV-WPM7H5A-24AGYQH";
+      bulbasaur-nix = "BNQQRWV-QNCW2VP-JA3HKVD-LTTTPDS-KY7IS37-XYSMOTH-6QCFC6K-LNJCSAQ";
     };
     self = config.networking.hostName;
     peers = lib.filterAttrs (n: _: n != self) allDevices;
@@ -32,5 +32,11 @@
         };
       };
     };
+
+    # Ensure the sync target exists before syncthing scans it. `d` only
+    # creates the directory when absent, so existing notes are left as-is.
+    systemd.tmpfiles.rules = [
+      "d /home/madeline/notes 0755 madeline users -"
+    ];
   };
 }
