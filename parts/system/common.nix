@@ -35,7 +35,13 @@
         git push
       }
       mc() {
-        portablemc start -au madeline0706 "''${1:?Usage: mc <version>}"
+        local version
+        version=$(portablemc search release 2>/dev/null | awk '{print $2}' | tac \
+          | bemenu -l 20 -p "minecraft" --fn 'Terminus 12' -c --width-factor 0.3 \
+              --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' \
+              --tb '#000000ff' --tf '#a7c080ff' --ff '#c8c4b0ff' --hf '#dbbc7fff' \
+              -H 20 -B 1 --bdr '#a7c080ff') || return
+        [ -n "$version" ] && portablemc start -au madeline0706 "$version"
       }
     '';
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
