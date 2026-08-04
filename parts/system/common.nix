@@ -36,7 +36,8 @@
       }
       mc() {
         local version
-        version=$(portablemc search release 2>/dev/null | awk '{print $2}' | tac \
+        version=$(portablemc search 2>/dev/null \
+          | awk -F'│' 'NF>3 && $3 ~ /Release/ {gsub(/^[ \t]+|[ \t]+$/,"",$2); print $2}' \
           | bemenu -l 20 -p "minecraft" --fn 'Terminus 12' -c --width-factor 0.3 \
               --nb '#000000ff' --hb '#000000ff' --fb '#000000ff' --ab '#000000ff' \
               --tb '#000000ff' --tf '#a7c080ff' --ff '#c8c4b0ff' --hf '#dbbc7fff' \
