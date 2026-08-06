@@ -66,6 +66,7 @@
       lf = { name = "lf"; noDisplay = true; };
       khal = { name = "ikhal"; noDisplay = true; };
       nvim = { name = "Neovim wrapper"; noDisplay = true; };
+      syncthing-ui = { name = "Syncthing Web UI"; noDisplay = true; };
     };
 
     home.file.".local/share/applications/btop.desktop".text = ''
