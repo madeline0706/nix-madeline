@@ -14,6 +14,7 @@
   nix.settings.extra-trusted-public-keys = [ "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI=" ];
   networking.hostName = "bulbasaur-nix";
   programs.steam.enable = true;
+  programs.steam.package = pkgs.millennium-steam;
   boot.consoleLogLevel = 3;
   hardware.graphics = {
     enable = true;

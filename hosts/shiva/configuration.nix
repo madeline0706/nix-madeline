@@ -19,6 +19,7 @@
   hardware.bluetooth.enable = false;
 
   programs.steam.enable = true;
+  programs.steam.package = pkgs.millennium-steam;
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
