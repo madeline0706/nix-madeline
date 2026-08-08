@@ -18,6 +18,12 @@
   hardware.cpu.amd.updateMicrocode = true;
   hardware.bluetooth.enable = false;
 
+  programs.steam.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   services.tlp = {
     enable = true;
     settings = {
