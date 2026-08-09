@@ -47,3 +47,4 @@ Use the same Immich user on every machine so uploads share the `Screenshots` / `
 
 # Screenshots
 ![Screenshot 1](https://bulbasaur.spellbound.sh/screenshots/08-09-26-3607-13eb.png "Screenshot 1")
+![Recording 1](https://bulbasaur.spellbound.sh/recordings/08-09-26-681d-18cd.mp4 "Recording 1")
