@@ -6,15 +6,18 @@ posts="$repo/site/blog/posts"
 
 usage() {
     cat <<'EOF'
-post — manage blog posts in the carbuncle repo (site/blog/posts/)
+post — publish blog posts to the carbuncle repo (site/blog/posts/)
 
 usage:
-  post --new <file.md>       validate <file.md> and add it to the posts folder
-  post --remove <file.md>    remove a post from the posts folder
+  post --new <file.md>       validate, add, commit ("Post: Add <title>") and deploy
+  post --remove <file.md>    remove, commit ("Post: Remove <title>") and deploy
   post --list                list current posts
 
-repo location defaults to ~/Development/nix-carbuncle (override with $CARBUNCLE_REPO).
-after --new / --remove, deploy the repo to publish (then purge the Cloudflare cache).
+options:
+  --no-deploy                stage + commit only; skip the deploy step
+
+repo defaults to ~/Development/nix-carbuncle (override with $CARBUNCLE_REPO).
+set $CLOUDFLARE_API_TOKEN and $CLOUDFLARE_ZONE_ID to auto-purge the CDN on deploy.
 EOF
 }
 
@@ -66,27 +69,69 @@ validate() {
     has_body "$f" || die "post has no body content"
 }
 
+purge_cloudflare() {
+    if [ -n "${CLOUDFLARE_API_TOKEN:-}" ] && [ -n "${CLOUDFLARE_ZONE_ID:-}" ]; then
+        echo "post: purging Cloudflare cache"
+        if curl -fsS -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}' >/dev/null; then
+            echo "post: cache purged"
+        else
+            echo "post: warning: Cloudflare purge failed" >&2
+        fi
+    else
+        echo "post: (set \$CLOUDFLARE_API_TOKEN + \$CLOUDFLARE_ZONE_ID to auto-purge the CDN)"
+    fi
+}
+
+publish() {
+    local action="$1" title="$2" path="$3"
+
+    if git -C "$repo" diff --cached --quiet -- "$path"; then
+        echo "post: no changes to commit"
+    else
+        git -C "$repo" commit -q -m "Post: $action $title" -- "$path"
+        echo "post: committed \"Post: $action $title\""
+    fi
+
+    if [ -n "${no_deploy:-}" ]; then
+        echo "post: skipping deploy (--no-deploy)"
+        return
+    fi
+
+    echo "post: deploying"
+    ( cd "$repo" && ./deploy )
+    purge_cloudflare
+    echo "post: done"
+}
+
 [ -d "$repo/.git" ] || die "carbuncle repo not found at $repo (set \$CARBUNCLE_REPO)"
+
+no_deploy=""
+for a in "$@"; do [ "$a" = "--no-deploy" ] && no_deploy=1; done
 
 cmd="${1:-}"
 case "$cmd" in
     --new)
-        src="${2:-}"; [ -n "$src" ] || { usage; die "no file given"; }
+        src="${2:-}"; [ -n "$src" ] && [ "$src" != "--no-deploy" ] || { usage; die "no file given"; }
         validate "$src"
         base="$(basename "$src")"
         dest="$posts/$base"
+        title="$(frontmatter "$src" title)"
         mkdir -p "$posts"
         [ -e "$dest" ] && echo "post: updating existing '$base'" || echo "post: adding '$base'"
         cp -- "$src" "$dest"
         git -C "$repo" add -- "$dest"
-        echo "post: staged $dest"
-        echo "post: deploy the repo to publish"
+        publish "Add" "$title" "$dest"
         ;;
     --remove)
-        name="${2:-}"; [ -n "$name" ] || { usage; die "no file given"; }
+        name="${2:-}"; [ -n "$name" ] && [ "$name" != "--no-deploy" ] || { usage; die "no file given"; }
         base="$(basename "$name")"
         dest="$posts/$base"
         [ -e "$dest" ] || die "no such post: $base"
+        title="$(frontmatter "$dest" title)"; title="${title:-$base}"
         read -r -p "post: remove '$base'? [y/N] " ans
         case "$ans" in
             [yY]*) ;;
@@ -96,9 +141,9 @@ case "$cmd" in
             git -C "$repo" rm -f -q -- "$dest"
         else
             rm -- "$dest"
+            git -C "$repo" add -- "$dest" 2>/dev/null || true
         fi
-        echo "post: removed $base"
-        echo "post: deploy the repo to publish"
+        publish "Remove" "$title" "$dest"
         ;;
     --list)
         shopt -s nullglob
