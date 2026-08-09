@@ -46,5 +46,5 @@ Create the key under Immich > Account Settings > API Keys with these permissions
 Use the same Immich user on every machine so uploads share the `Screenshots` / `Wallpapers` albums. An `immich-sync.timer` then syncs hourly (run `immich-sync` to sync now).
 
 # Screenshots
-[<img width="1923" height="1080" alt="image" src="https://github.com/user-attachments/assets/22e97407-4cee-400d-a12e-f69bb08f0ee3" />](https://bulbasaur.spellbound.sh/screenshots/08-09-26-3607-13eb.png)
-
+https://bulbasaur.spellbound.sh/screenshots/08-09-26-3607-13eb.png
+![Screenshot 1](https://bulbasaur.spellbound.sh/screenshots/08-09-26-3607-13eb.png) "Screenshot 1")
