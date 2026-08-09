@@ -1,5 +1,7 @@
 # madeline-nix
-A work in progress Nix configuration aiming to support all of my machines.
+A work in progress Nix configuration aiming to support my client machines. Currently:
+- shiva (Dell Pro 14)
+- bulbasaur (to be renamed) (r9 9900x // 9070xt)
 
 # Design Philosophy
 
@@ -39,7 +41,7 @@ IMMICH_INSTANCE_URL="https://photos.example.com/api"
 IMMICH_API_KEY=""
 ```
 
-Create the key under Immich → Account Settings → API Keys with these permissions:
+Create the key under Immich > Account Settings > API Keys with these permissions:
 `user.read`, `asset.upload`, `album.read`, `album.create`, `albumAsset.create`.
 Use the same Immich user on every machine so uploads share the `Screenshots` / `Wallpapers` albums. An `immich-sync.timer` then syncs hourly (run `immich-sync` to sync now).
 
