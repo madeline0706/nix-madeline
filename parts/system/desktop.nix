@@ -30,6 +30,10 @@
       config.common = {
         "org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
       };
+      wlr.settings.screencast = {
+        chooser_type = "simple";
+        chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or";
+      };
     };
 
     environment.sessionVariables = {
