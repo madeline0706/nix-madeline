@@ -9,12 +9,13 @@ usage() {
 post — publish blog posts to the carbuncle repo (site/blog/posts/)
 
 usage:
-  post --new <file.md>       validate, add, commit ("Post: Add <title>") and deploy
-  post --remove <file.md>    remove, commit ("Post: Remove <title>") and deploy
+  post --new <file.md>       validate, add, commit ("Post: Add <title>"), push and deploy
+  post --remove <file.md>    remove, commit ("Post: Remove <title>"), push and deploy
   post --list                list current posts
 
 options:
-  --no-deploy                stage + commit only; skip the deploy step
+  --no-push                  don't push to the git remote
+  --no-deploy                don't deploy to the Pi (still commits + pushes)
 
 repo defaults to ~/Development/nix-carbuncle (override with $CARBUNCLE_REPO).
 set $CLOUDFLARE_API_TOKEN and $CLOUDFLARE_ZONE_ID to auto-purge the CDN on deploy.
@@ -96,6 +97,15 @@ publish() {
         echo "post: committed \"Post: $action $title\""
     fi
 
+    if [ -z "${no_push:-}" ]; then
+        echo "post: pushing"
+        if git -C "$repo" push -q; then
+            echo "post: pushed"
+        else
+            echo "post: warning: push failed" >&2
+        fi
+    fi
+
     if [ -n "${no_deploy:-}" ]; then
         echo "post: skipping deploy (--no-deploy)"
         return
@@ -110,12 +120,16 @@ publish() {
 [ -d "$repo/.git" ] || die "carbuncle repo not found at $repo (set \$CARBUNCLE_REPO)"
 
 no_deploy=""
-for a in "$@"; do [ "$a" = "--no-deploy" ] && no_deploy=1; done
+no_push=""
+for a in "$@"; do
+    [ "$a" = "--no-deploy" ] && no_deploy=1
+    [ "$a" = "--no-push" ] && no_push=1
+done
 
 cmd="${1:-}"
 case "$cmd" in
     --new)
-        src="${2:-}"; [ -n "$src" ] && [ "$src" != "--no-deploy" ] || { usage; die "no file given"; }
+        src="${2:-}"; [ -n "$src" ] && [[ "$src" != --* ]] || { usage; die "no file given"; }
         validate "$src"
         base="$(basename "$src")"
         dest="$posts/$base"
@@ -127,7 +141,7 @@ case "$cmd" in
         publish "Add" "$title" "$dest"
         ;;
     --remove)
-        name="${2:-}"; [ -n "$name" ] && [ "$name" != "--no-deploy" ] || { usage; die "no file given"; }
+        name="${2:-}"; [ -n "$name" ] && [[ "$name" != --* ]] || { usage; die "no file given"; }
         base="$(basename "$name")"
         dest="$posts/$base"
         [ -e "$dest" ] || die "no such post: $base"
