@@ -97,6 +97,16 @@
 
         # Auto-close brackets and quotes as you type.
         nvim-autopairs.enable = true;
+
+        # Live markdown preview in the browser — re-renders and scroll-syncs as
+        # you type. Toggled with <leader>mp below (or :MarkdownPreview).
+        markdown-preview = {
+          enable = true;
+          settings = {
+            auto_close = 1;   # Close the preview tab when you leave the buffer.
+            theme = "dark";
+          };
+        };
       };
 
       # A lightweight personal wiki over a directory of markdown notes:
@@ -136,6 +146,12 @@
           key = "<leader>v";
           action = "<cmd>Visual<CR>";
           options.desc = "Open note graph in browser";
+        }
+        {
+          mode = "n";
+          key = "<leader>mp";
+          action = "<cmd>MarkdownPreviewToggle<CR>";
+          options.desc = "Toggle markdown preview";
         }
         {
           mode = "n";
