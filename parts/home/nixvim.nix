@@ -13,6 +13,14 @@
     };
     # SuperCollider engine (sclang/scsynth) that scnvim drives for live-coding music.
     supercollider = pkgs.supercollider-with-sc3-plugins;
+    # scsynth is linked against jack2, but audio on these hosts is PipeWire. Launch
+    # sclang (and thus the scsynth child it spawns) with PipeWire's drop-in libjack
+    # ahead on the library path, so it connects to PipeWire's JACK server instead of
+    # looking for a real jackd that isn't running.
+    sclang-pw = pkgs.writeShellScript "sclang-pw" ''
+      export LD_LIBRARY_PATH=${pkgs.pipewire.jack}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      exec ${supercollider}/bin/sclang "$@"
+    '';
   in {
     imports = [ inputs.nixvim.homeModules.nixvim ];
 
@@ -139,7 +147,7 @@
         local map = scnvim.map
         local map_expr = scnvim.map_expr
         scnvim.setup({
-          sclang = { cmd = "${supercollider}/bin/sclang" },
+          sclang = { cmd = "${sclang-pw}" },
           keymaps = {
             ["<M-e>"] = map("editor.send_line", { "i", "n" }),
             ["<C-e>"] = {
