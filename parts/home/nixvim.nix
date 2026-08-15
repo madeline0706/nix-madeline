@@ -16,11 +16,10 @@
   in {
     imports = [ inputs.nixvim.homeModules.nixvim ];
 
-    # scnvim talks to SuperCollider through its own SC class library. On NixOS the
-    # plugin's imperative auto-install can't work, so expose the classes declaratively
-    # by symlinking them into SuperCollider's user Extensions dir where sclang looks.
-    home.file.".local/share/SuperCollider/Extensions/scnvim".source =
-      "${pkgs.vimPlugins.scnvim}/scide_scnvim";
+    # NOTE: scnvim installs its own SuperCollider class library into
+    # ~/.local/share/SuperCollider/Extensions/scide_scnvim on first `:SCNvimStart`
+    # (that dir is writable, so no declarative symlink is needed — adding one just
+    # creates a second copy and SuperCollider then errors on duplicate classes).
 
     # visual.nvim's browser graph/note panel is styled in Terminus — the same
     # font used everywhere else (installed via base's `terminus_font`), so nothing
