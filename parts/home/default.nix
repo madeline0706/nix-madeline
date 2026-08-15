@@ -56,6 +56,7 @@
       ncdu
       pulsemixer
       mprisence
+      supercollider-with-sc3-plugins # sclang/scsynth engine for live-coding music (driven from Neovim via scnvim)
     ];
 
     xdg.desktopEntries = {

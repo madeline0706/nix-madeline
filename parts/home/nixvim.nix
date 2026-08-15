@@ -11,8 +11,16 @@
       version = "0.1";
       src = ./visual-nvim;
     };
+    # SuperCollider engine (sclang/scsynth) that scnvim drives for live-coding music.
+    supercollider = pkgs.supercollider-with-sc3-plugins;
   in {
     imports = [ inputs.nixvim.homeModules.nixvim ];
+
+    # scnvim talks to SuperCollider through its own SC class library. On NixOS the
+    # plugin's imperative auto-install can't work, so expose the classes declaratively
+    # by symlinking them into SuperCollider's user Extensions dir where sclang looks.
+    home.file.".local/share/SuperCollider/Extensions/scnvim".source =
+      "${pkgs.vimPlugins.scnvim}/scide_scnvim";
 
     # visual.nvim's browser graph/note panel is styled in Terminus — the same
     # font used everywhere else (installed via base's `terminus_font`), so nothing
@@ -112,11 +120,11 @@
       # A lightweight personal wiki over a directory of markdown notes:
       # [[wikilinks]] plus a self-hosted, Obsidian-style graph view in the
       # browser (:Visual). Added as a raw plugin and configured with setup() below.
-      extraPlugins = [ visual-nvim ];
+      extraPlugins = [ visual-nvim pkgs.vimPlugins.scnvim ];
 
       # ripgrep powers telescope's live_grep. visual.nvim needs nothing extra:
       # its web server is libuv (bundled with Neovim) and the graph is vanilla JS.
-      extraPackages = [ pkgs.ripgrep ];
+      extraPackages = [ pkgs.ripgrep supercollider ];
 
       # `root` is where notes live; `gf` follows a [[wikilink]] under the cursor,
       # and :Visual serves the note graph on a random port and opens the browser.
@@ -124,6 +132,32 @@
         require("visual").setup({
           root = vim.fn.expand("~/notes"),
           extensions = { "md", "markdown", "txt" },
+        })
+
+        -- scnvim: live-code SuperCollider from Neovim. Open a .scd file, start the
+        -- engine with <leader>ss, then evaluate code with the send maps below.
+        local scnvim = require("scnvim")
+        local map = scnvim.map
+        local map_expr = scnvim.map_expr
+        scnvim.setup({
+          sclang = { cmd = "${supercollider}/bin/sclang" },
+          keymaps = {
+            ["<M-e>"] = map("editor.send_line", { "i", "n" }),
+            ["<C-e>"] = {
+              map("editor.send_block", { "i", "n" }),
+              map("editor.send_selection", "x"),
+            },
+            ["<CR>"]   = map("postwin.toggle"),
+            ["<M-CR>"] = map("postwin.toggle", "i"),
+            ["<M-L>"]  = map("postwin.clear", { "n", "i" }),
+            ["<F12>"]  = map("sclang.hard_stop", { "n", "x", "i" }),
+            ["<leader>ss"] = map("sclang.start"),
+            ["<leader>sk"] = map("sclang.recompile"),
+            ["<F1>"]   = map_expr("s.boot"),
+            ["<F2>"]   = map_expr("s.meter"),
+          },
+          editor = { highlight = { color = "IncSearch" } },
+          postwin = { float = { enabled = false } },
         })
       '';
 

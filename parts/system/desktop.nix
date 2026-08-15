@@ -47,6 +47,7 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
+      jack.enable = true; # Sonic Pi's SuperCollider backend needs JACK
     };
 
     security.pam.services.waylock = {};
