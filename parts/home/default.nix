@@ -130,10 +130,10 @@
     '';
 
     xdg.configFile."mprisence/config.toml".text = ''
-      [web_player.feishin]
-      match_pattern = "feishin.spellbound.sh"
+      [web_player.navidrome]
+      match_pattern = "navidrome.spellbound.sh"
       ignore = false
-      name = "Feishin"
+      name = "Navidrome"
       app_id = "1525881474077819071"
       icon = "https://cdn.discordapp.com/app-icons/1525881474077819071/894022af46d9f9c4de8d41b7649bec6f.png?size=256"
     '';

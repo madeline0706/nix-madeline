@@ -10,6 +10,7 @@ post — publish blog posts to the carbuncle repo (site/blog/posts/)
 
 usage:
   post --new <file.md>       validate, add, commit ("Post: Add <title>"), push and deploy
+  post --update <file.md>    validate an existing post, commit ("Post: Update <title>"), push and deploy
   post --remove <file.md>    remove, commit ("Post: Remove <title>"), push and deploy
   post --list                list current posts
 
@@ -139,6 +140,18 @@ case "$cmd" in
         cp -- "$src" "$dest"
         git -C "$repo" add -- "$dest"
         publish "Add" "$title" "$dest"
+        ;;
+    --update)
+        src="${2:-}"; [ -n "$src" ] && [[ "$src" != --* ]] || { usage; die "no file given"; }
+        validate "$src"
+        base="$(basename "$src")"
+        dest="$posts/$base"
+        [ -e "$dest" ] || die "no such post to update: $base (use --new to create it)"
+        title="$(frontmatter "$src" title)"
+        echo "post: updating '$base'"
+        cp -- "$src" "$dest"
+        git -C "$repo" add -- "$dest"
+        publish "Update" "$title" "$dest"
         ;;
     --remove)
         name="${2:-}"; [ -n "$name" ] && [[ "$name" != --* ]] || { usage; die "no file given"; }
